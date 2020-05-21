@@ -50,8 +50,6 @@ public class MyDogsActivity extends AppCompatActivity {
                     addDogFab.setBackgroundTintList(ContextCompat.getColorStateList(MyDogsActivity.this, R.color.redLight));
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     addDogFab.setBackgroundTintList(ContextCompat.getColorStateList(MyDogsActivity.this, R.color.red));
-                    //loadImagefromGallery();
-                    //validateCameraPermission();
                     showPopUpMediaOptions();
                 }
                 return true;
@@ -67,17 +65,19 @@ public class MyDogsActivity extends AppCompatActivity {
         Button gallery = (Button)openDialog.findViewById(R.id.galleryBtn);
 
         gallery.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+                loadImagefromGallery();
                 openDialog.dismiss();
             }
         });
 
         camera.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+                callCameraPermissionAndValidation();
                 openDialog.dismiss();
             }
         });
@@ -125,7 +125,7 @@ public class MyDogsActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void validateCameraPermission(){
+    private void callCameraPermissionAndValidation(){
         if(checkCallingOrSelfPermission(Manifest.permission.CAMERA) ==  PackageManager.PERMISSION_GRANTED){
             takePicture();
         }else{
