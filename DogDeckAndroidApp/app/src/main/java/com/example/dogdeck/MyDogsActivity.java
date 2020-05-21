@@ -6,15 +6,22 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.ViewGroup.LayoutParams;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +30,9 @@ public class MyDogsActivity extends AppCompatActivity {
 
     FloatingActionButton addDogFab;
     ImageView imgView;
+    PopupWindow popupWindow;
+    Button cameraPopUpBtn;
+    RelativeLayout relativeLayout;
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
@@ -32,6 +42,7 @@ public class MyDogsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
+        relativeLayout = (RelativeLayout)findViewById(R.id.relative_layout);
         addDogFab = (FloatingActionButton) findViewById(R.id.add_dog);
         imgView = (ImageView) findViewById(R.id.imageView1);
 
@@ -44,9 +55,25 @@ public class MyDogsActivity extends AppCompatActivity {
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     addDogFab.setBackgroundTintList(ContextCompat.getColorStateList(MyDogsActivity.this, R.color.red));
                     //loadImagefromGallery();
-                    validateCameraPermission();
+                    //validateCameraPermission();
+                    showPopUpOptions();
                 }
                 return true;
+            }
+        });
+    }
+
+    private void showPopUpOptions(){
+        LayoutInflater layoutInflater = (LayoutInflater) MyDogsActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View customView = layoutInflater.inflate(R.layout.select_camera_or_gallery_pop_up,null);
+        cameraPopUpBtn = (Button) customView.findViewById(R.id.cameraBtn);
+        popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        popupWindow.showAtLocation(relativeLayout, Gravity.CENTER, 0, 0);
+
+        cameraPopUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
             }
         });
     }
