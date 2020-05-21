@@ -1,27 +1,31 @@
 package com.example.dogdeck;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import static android.view.MotionEvent.*;
 
 public class MyDogsActivity extends AppCompatActivity {
 
     FloatingActionButton addDogFab;
-    private static int RESULT_LOAD_IMG = 1;
+    ImageView imgView;
+    private static final int GALLERY_REQUEST = 1;
+    private static final int CAMERA_REQUEST = 2;
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -29,17 +33,18 @@ public class MyDogsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
         addDogFab = (FloatingActionButton) findViewById(R.id.add_dog);
+        imgView = (ImageView) findViewById(R.id.imageView1);
 
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
                     addDogFab.setBackgroundTintList(ContextCompat.getColorStateList(MyDogsActivity.this, R.color.redLight));
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Toast.makeText(MyDogsActivity.this,"Hiciste Clic",Toast.LENGTH_SHORT).show();
                     addDogFab.setBackgroundTintList(ContextCompat.getColorStateList(MyDogsActivity.this, R.color.red));
-                    loadImagefromGallery();
-
+                    //loadImagefromGallery();
+                    validateCameraPermission();
                 }
                 return true;
             }
@@ -47,9 +52,13 @@ public class MyDogsActivity extends AppCompatActivity {
     }
 
     private void loadImagefromGallery() {
-        // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+        startActivityForResult(galleryIntent, GALLERY_REQUEST);
+    }
+
+    private void takePicture(){
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
     @Override
@@ -58,18 +67,53 @@ public class MyDogsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         try {
-            // When an Image is picked
-            if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data) {
-                // Get the Image from data
-                //selectedImage = data.getData();
-                //imgView.setImageURI(selectedImage);
-            } else {
-                Toast.makeText(this, "No escogiste una imagen", Toast.LENGTH_LONG).show();
+            // When an Image is picked from gallery
+            if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && null != data) {
+                Uri selectedImage = Uri.EMPTY;
+                selectedImage = data.getData();
+                imgView.setImageURI(selectedImage);
+                return;
             }
+
+            // When an Image is picked from camera
+            if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && null != data) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                imgView.setImageBitmap(photo);
+                return;
+            }
+
+            Toast.makeText(this, "No escogiste una imagen", Toast.LENGTH_LONG).show();
+
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
             //selectedImage = Uri.EMPTY;
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void validateCameraPermission(){
+        if(checkCallingOrSelfPermission(Manifest.permission.CAMERA) ==  PackageManager.PERMISSION_GRANTED){
+            takePicture();
+        }else{
+            if(shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                String messageCamera = "Camera permission is needed";
+                Toast.makeText(MyDogsActivity.this,messageCamera,Toast.LENGTH_SHORT).show();
+            }
+            requestPermissions(new String[]{Manifest.permission.CAMERA},CAMERA_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults){
+        if(requestCode == CAMERA_REQUEST){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                takePicture();
+            }else{
+                String messagePermissions = "Permission was not granted";
+                Toast.makeText(MyDogsActivity.this,messagePermissions,Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        }
+    }
 }
