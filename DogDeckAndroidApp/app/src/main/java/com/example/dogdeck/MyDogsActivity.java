@@ -3,6 +3,7 @@ package com.example.dogdeck;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,9 +12,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +29,11 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MyDogsActivity extends AppCompatActivity {
 
     FloatingActionButton addDogFab;
@@ -32,6 +42,8 @@ public class MyDogsActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private static final int REQUEST_TAKE_PHOTO = 1;
+    String currentPhotoPath;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -41,6 +53,7 @@ public class MyDogsActivity extends AppCompatActivity {
         relativeLayout = (RelativeLayout)findViewById(R.id.relative_layout);
         addDogFab = (FloatingActionButton) findViewById(R.id.add_dog);
         imgView = (ImageView) findViewById(R.id.imageView1);
+
 
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -91,8 +104,25 @@ public class MyDogsActivity extends AppCompatActivity {
     }
 
     private void takePicture(){
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.e("Fail create image",ex.toString());
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.dogdeck.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent,CAMERA_REQUEST);
+            }
+        }
     }
 
     @Override
@@ -111,8 +141,8 @@ public class MyDogsActivity extends AppCompatActivity {
 
             // When an Image is picked from camera
             if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && null != data) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                imgView.setImageBitmap(photo);
+                Bitmap myBitmap = BitmapFactory.decodeFile(currentPhotoPath);
+                imgView.setImageBitmap(myBitmap);
                 return;
             }
 
@@ -120,7 +150,6 @@ public class MyDogsActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
-            //selectedImage = Uri.EMPTY;
         }
     }
 
@@ -149,5 +178,19 @@ public class MyDogsActivity extends AppCompatActivity {
         }else{
             super.onRequestPermissionsResult(requestCode,permissions,grantResults);
         }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 }
