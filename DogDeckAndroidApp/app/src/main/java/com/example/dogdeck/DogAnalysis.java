@@ -14,8 +14,11 @@ public class DogAnalysis extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_analysis);
-
         dogPhoto = findViewById(R.id.dogPhoto);
+        setDogPhoto();
+    }
+
+    private void setDogPhoto(){
         Bundle bundle = getIntent().getExtras();
         String uri = bundle.getString("imageUri");
         Bitmap imageCameraBitmap = BitmapFactory.decodeFile(uri);

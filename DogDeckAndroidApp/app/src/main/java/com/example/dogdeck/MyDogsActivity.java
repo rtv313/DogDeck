@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyDogsActivity extends AppCompatActivity {
+
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
     private FloatingActionButton addDogFab;
@@ -136,8 +137,9 @@ public class MyDogsActivity extends AppCompatActivity {
 
             // When an Image is picked from camera
             if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && null != data) {
-                Bitmap imageCameraBitmap = BitmapFactory.decodeFile(newDogPhotoPath);
-                imgView.setImageBitmap(imageCameraBitmap);
+                // TODO Remove this comments
+                //Bitmap imageCameraBitmap = BitmapFactory.decodeFile(newDogPhotoPath);
+                //imgView.setImageBitmap(imageCameraBitmap);
             }
 
             // Start Dog Analysis Activity
