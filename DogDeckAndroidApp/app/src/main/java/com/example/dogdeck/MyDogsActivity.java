@@ -8,7 +8,6 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,8 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,25 +33,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyDogsActivity extends AppCompatActivity {
-
-    FloatingActionButton addDogFab;
-    ImageView imgView;
-    RelativeLayout relativeLayout;
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
-    private static final int MY_CAMERA_REQUEST_CODE = 100;
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    String currentPhotoPath;
+    private FloatingActionButton addDogFab;
+    private ImageView imgView;
+    private LinearLayout linearLayout;
+    private String currentPhotoPath;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
-        relativeLayout = (RelativeLayout)findViewById(R.id.relative_layout);
-        addDogFab = (FloatingActionButton) findViewById(R.id.add_dog);
-        imgView = (ImageView) findViewById(R.id.imageView1);
-
+        linearLayout = findViewById(R.id.relative_layout);
+        addDogFab =  findViewById(R.id.add_dog);
+        imgView =  findViewById(R.id.imageView1);
 
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -74,8 +68,8 @@ public class MyDogsActivity extends AppCompatActivity {
         final Dialog openDialog = new Dialog(MyDogsActivity.this);
         openDialog.setContentView(R.layout.select_camera_or_gallery_dialog);
         openDialog.setTitle("Custom Dialog Box");
-        Button camera = (Button) openDialog.findViewById(R.id.cameraBtn);
-        Button gallery = (Button)openDialog.findViewById(R.id.galleryBtn);
+        Button camera = openDialog.findViewById(R.id.cameraBtn);
+        Button gallery = openDialog.findViewById(R.id.galleryBtn);
 
         gallery.setOnClickListener(new View.OnClickListener(){
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -133,20 +127,24 @@ public class MyDogsActivity extends AppCompatActivity {
         try {
             // When an Image is picked from gallery
             if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && null != data) {
-                Uri selectedImage = Uri.EMPTY;
-                selectedImage = data.getData();
+                Uri selectedImage = data.getData();
                 imgView.setImageURI(selectedImage);
-                return;
+
+
             }
 
             // When an Image is picked from camera
             if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && null != data) {
-                Bitmap myBitmap = BitmapFactory.decodeFile(currentPhotoPath);
-                imgView.setImageBitmap(myBitmap);
-                return;
+                Bitmap imageCameraBitmap = BitmapFactory.decodeFile(currentPhotoPath);
+                imgView.setImageBitmap(imageCameraBitmap);
             }
 
-            Toast.makeText(this, "No escogiste una imagen", Toast.LENGTH_LONG).show();
+            // Start Dog Analysis Activity
+            Intent intent = new Intent(MyDogsActivity.this, DogAnalysis.class);
+            Bundle b = new Bundle();
+            b.putString("imageUri",currentPhotoPath); //Your id
+            intent.putExtras(b); //Put your id to your next Intent
+            startActivity(intent);
 
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
