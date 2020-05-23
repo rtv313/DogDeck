@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +28,10 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -128,9 +132,8 @@ public class MyDogsActivity extends AppCompatActivity {
             // When an Image is picked from gallery
             if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && null != data) {
                 Uri selectedImage = data.getData();
-                imgView.setImageURI(selectedImage);
-
-
+                //imgView.setImageURI(selectedImage);
+                currentPhotoPath = copyFileFromGallery(selectedImage);
             }
 
             // When an Image is picked from camera
@@ -190,5 +193,35 @@ public class MyDogsActivity extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private String copyFileFromGallery( Uri uriImageGallery) throws IOException {
+        // Get Bitmap path
+        imgView.setImageURI(uriImageGallery);
+        String path = uriImageGallery.getPath();
+        // Get Bitmap
+        Bitmap bitmap = ((BitmapDrawable)imgView.getDrawable()).getBitmap();
+        // Save Bitmap as JPG
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        //Convert bitmap to byte array
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+        //Write the bytes in file
+        FileOutputStream fos = new FileOutputStream(image);
+        fos.write(bitmapdata);
+        fos.flush();
+        fos.close();
+        return image.getAbsolutePath();
     }
 }
