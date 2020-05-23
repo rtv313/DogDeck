@@ -30,7 +30,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,7 +41,7 @@ public class MyDogsActivity extends AppCompatActivity {
     private FloatingActionButton addDogFab;
     private ImageView imgView;
     private LinearLayout linearLayout;
-    private String currentPhotoPath;
+    private String newDogPhotoPath;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -132,20 +131,19 @@ public class MyDogsActivity extends AppCompatActivity {
             // When an Image is picked from gallery
             if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && null != data) {
                 Uri selectedImage = data.getData();
-                //imgView.setImageURI(selectedImage);
-                currentPhotoPath = copyFileFromGallery(selectedImage);
+                newDogPhotoPath = copyFileFromGallery(selectedImage);
             }
 
             // When an Image is picked from camera
             if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && null != data) {
-                Bitmap imageCameraBitmap = BitmapFactory.decodeFile(currentPhotoPath);
+                Bitmap imageCameraBitmap = BitmapFactory.decodeFile(newDogPhotoPath);
                 imgView.setImageBitmap(imageCameraBitmap);
             }
 
             // Start Dog Analysis Activity
             Intent intent = new Intent(MyDogsActivity.this, DogAnalysis.class);
             Bundle b = new Bundle();
-            b.putString("imageUri",currentPhotoPath); //Your id
+            b.putString("imageUri", newDogPhotoPath); //Your id
             intent.putExtras(b); //Put your id to your next Intent
             startActivity(intent);
 
@@ -191,16 +189,17 @@ public class MyDogsActivity extends AppCompatActivity {
                 storageDir      /* directory */
         );
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        newDogPhotoPath = image.getAbsolutePath();
         return image;
     }
 
     private String copyFileFromGallery( Uri uriImageGallery) throws IOException {
-        // Get Bitmap path
-        imgView.setImageURI(uriImageGallery);
+        // Use imageView for get the bitmap
+        ImageView helperImgView  = new ImageView(this);
+        helperImgView.setImageURI(uriImageGallery);
         String path = uriImageGallery.getPath();
         // Get Bitmap
-        Bitmap bitmap = ((BitmapDrawable)imgView.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable)helperImgView.getDrawable()).getBitmap();
         // Save Bitmap as JPG
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -211,12 +210,10 @@ public class MyDogsActivity extends AppCompatActivity {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
         //Convert bitmap to byte array
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos);
         byte[] bitmapdata = bos.toByteArray();
-
         //Write the bytes in file
         FileOutputStream fos = new FileOutputStream(image);
         fos.write(bitmapdata);
