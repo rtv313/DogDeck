@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -27,12 +28,18 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class DogAnalysis extends AppCompatActivity {
 
     ImageView dogPhoto;
+    TextView breedOne,breedTwo,breedThree;
     ArrayList<String> labels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,9 @@ public class DogAnalysis extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_analysis);
         dogPhoto = findViewById(R.id.dogPhoto);
+        breedOne = findViewById(R.id.breedOne);
+        breedTwo = findViewById(R.id.breedTwo);
+        breedThree = findViewById(R.id.breedThree);
         setDogPhoto();
 
         try {
@@ -85,7 +95,27 @@ public class DogAnalysis extends AppCompatActivity {
             resultsMap.put(labels.get(i),inferredValues[i]);
         }
 
-        int x = 0;
+        resultsMap = sortByValue(resultsMap);
+        int i = 0;
+        for(String key : resultsMap.keySet()) {
+
+            if (i == 0) {
+                breedOne.setText(key +" "+ String.valueOf(resultsMap.get(key) * 100));
+            }
+
+            if (i == 1) {
+                breedTwo.setText(key + " " + String.valueOf(resultsMap.get(key) * 100));
+            }
+
+            if (i == 2) {
+                breedThree.setText(key + " " + String.valueOf(resultsMap.get(key) * 100));
+            }
+
+            if(i==3)
+                break;
+
+            i++;
+        }
     }
 
     private void setDogPhoto(){
@@ -104,5 +134,27 @@ public class DogAnalysis extends AppCompatActivity {
         }
         reader.close();
         return labelList;
+    }
+
+    private HashMap<String, Float> sortByValue(HashMap<String, Float> hm)
+    {
+        // Create a list from elements of HashMap
+        List<Map.Entry<String, Float> > list = new LinkedList<Map.Entry<String, Float> >(hm.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<String, Float> >() {
+            public int compare(Map.Entry<String, Float> o1,Map.Entry<String, Float> o2)
+            {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        Collections.reverse(list);
+        // put data from sorted list to hashmap
+        HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
+        for (Map.Entry<String, Float> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
     }
 }
