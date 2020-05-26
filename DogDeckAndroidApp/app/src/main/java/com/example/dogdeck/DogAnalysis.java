@@ -13,19 +13,15 @@ import android.widget.TextView;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.common.FileUtil;
-import org.tensorflow.lite.support.common.TensorProcessor;
 import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
-import org.tensorflow.lite.support.label.TensorLabel;
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-import org.tensorflow.lite.support.model.Model;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,8 +65,6 @@ public class DogAnalysis extends AppCompatActivity {
         tImage = imageProcessor.process(tImage);
 
 
-
-        //TensorBuffer probabilityBuffer = TensorBuffer.createFixedSize(new int[]{120}, DataType.UINT8);
         float[][] probabilityBuffer = new float[1][120];
         Interpreter tflite = null;
 
