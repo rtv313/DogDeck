@@ -1,10 +1,22 @@
 package DataBase;
 
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.opencsv.CSVReader;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    //Activity
+    private Activity activity;
+
     // Tables Names
     public static final String DOG_BREEDS = "DOG_BREEDS";
     public static final String DOGS = "DOGS";
@@ -13,7 +25,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String ID_DOGS_BREEDS = "id";
     public static final String NAME = "name";
     public static final String ORIGIN = "origin";
-    public static final String BREED = "breed";
     public static final String HEIGHT = "height";
     public static final String WEIGHT = "weight";
     public static final String LIFE_SPAN = "life_span";
@@ -35,11 +46,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final int DB_VERSION = 1;
 
     // Creating table DOG_BREEDS query
-    private static final String CREATE_TABLE_DOGS_BREED = "create table " + DOGS + "("
+    private static final String CREATE_TABLE_DOGS_BREED = "create table " + DOG_BREEDS + "("
             + ID_DOGS + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
             + NAME + " TEXT NOT NULL,"
             + ORIGIN + " TEXT NOT NULL,"
-            + BREED + " TEXT NOT NULL,"
             + HEIGHT + " TEXT NOT NULL,"
             + WEIGHT + " TEXT NOT NULL,"
             + LIFE_SPAN + " TEXT NOT NULL,"
@@ -47,7 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + HEALTH + " TEXT NOT NULL" + ");";
 
     // Creating table DOGS query
-    private static final String CREATE_TABLE_DOGS= "create table " + DOG_BREEDS + "("
+    private static final String CREATE_TABLE_DOGS= "create table " + DOGS + "("
             + ID_DOGS_BREEDS + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
             + BREED_ONE + " INTEGER NOT NULL,"
             + BREED_TWO + " INTEGER NOT NULL,"
@@ -59,14 +69,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "FOREIGN KEY" + "(" + BREED_THREE + ")" + " REFERENCES " + DOG_BREEDS  + "(\"id\")"
             + ");";
 
-    public DatabaseHelper(Context context) {
+    public DatabaseHelper(Context context,Activity activity) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.activity = activity;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_DOGS_BREED);
         db.execSQL(CREATE_TABLE_DOGS);
+        fillDogsBreedsDatabase(db);
     }
 
     @Override
@@ -74,5 +86,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DOG_BREEDS);
         db.execSQL("DROP TABLE IF EXISTS " + DOGS);
         onCreate(db);
+    }
+
+    private void fillDogsBreedsDatabase(SQLiteDatabase db){
+        try{
+            // Object only to get access to Assets
+            InputStreamReader inputStreamReader = new InputStreamReader(this.activity.getAssets().open("dogs_clean_data.csv"));
+            CSVReader reader = new CSVReader(inputStreamReader);//Specify asset file name
+            String [] nextLine;
+            nextLine = reader.readNext(); // Read headers
+
+            while ((nextLine = reader.readNext()) != null) {
+                String origin = nextLine[1];
+                String height = nextLine[2];
+                String weight = nextLine[3];
+                String lifeSpan = nextLine[4];
+                String temperament = nextLine[5];
+                String health = nextLine[6];
+                String name = nextLine[7];
+                int id = Integer.valueOf(nextLine[8]);
+
+                ContentValues contentValue = new ContentValues();
+                contentValue.put(DatabaseHelper.ID_DOGS_BREEDS,id);
+                contentValue.put(DatabaseHelper.NAME, name);
+                contentValue.put(DatabaseHelper.ORIGIN, origin);
+                contentValue.put(DatabaseHelper.HEIGHT, height);
+                contentValue.put(DatabaseHelper.WEIGHT, weight);
+                contentValue.put(DatabaseHelper.LIFE_SPAN, lifeSpan);
+                contentValue.put(DatabaseHelper.TEMPERAMENT, temperament);
+                contentValue.put(DatabaseHelper.HEALTH, health);
+                db.insert(DatabaseHelper.DOG_BREEDS, null, contentValue);
+            }
+            inputStreamReader.close();
+            reader.close();
+        }catch(IOException e){
+            e.printStackTrace();
+            Log.d("Fill Database Error","Failed reading the CSV");
+        }
     }
 }

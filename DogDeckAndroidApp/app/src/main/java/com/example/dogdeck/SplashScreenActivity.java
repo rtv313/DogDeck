@@ -19,7 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        dbManager = new DBManager(this);
+        dbManager = new DBManager(this,this);
         dbManager.open();
         dbManager.close();
 

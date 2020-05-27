@@ -1,5 +1,6 @@
 package DataBase;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,17 +10,17 @@ import android.database.sqlite.SQLiteDatabase;
 public class DBManager {
 
     private DatabaseHelper dbHelper;
-
     private Context context;
-
+    private Activity activity;
     private SQLiteDatabase database;
 
-    public DBManager(Context c) {
+    public DBManager(Context c, Activity activity) {
         context = c;
+        this.activity = activity;
     }
 
     public DBManager open() throws SQLException {
-        dbHelper = new DatabaseHelper(context);
+        dbHelper = new DatabaseHelper(context,this.activity);
         database = dbHelper.getWritableDatabase();
         return this;
     }
@@ -28,11 +29,20 @@ public class DBManager {
         dbHelper.close();
     }
 
-    public void insert(String name, String desc) {
-       /* ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.SUBJECT, name);
-        contentValue.put(DatabaseHelper.DESC, desc);
-        database.insert(DatabaseHelper.TABLE_NAME, null, contentValue); */
+    public void insert(int id,String name,String origin,String height,
+                       String weight,String lifeSpan,String temperament,String health) {
+
+        ContentValues contentValue = new ContentValues();
+        contentValue.put(DatabaseHelper.ID_DOGS_BREEDS,id);
+        contentValue.put(DatabaseHelper.NAME, name);
+        contentValue.put(DatabaseHelper.ORIGIN, origin);
+        contentValue.put(DatabaseHelper.HEIGHT, height);
+        contentValue.put(DatabaseHelper.WEIGHT, weight);
+        contentValue.put(DatabaseHelper.LIFE_SPAN, lifeSpan);
+        contentValue.put(DatabaseHelper.TEMPERAMENT, temperament);
+        contentValue.put(DatabaseHelper.HEALTH, health);
+
+        database.insert(DatabaseHelper.DOG_BREEDS, null, contentValue);
     }
 
     /*
