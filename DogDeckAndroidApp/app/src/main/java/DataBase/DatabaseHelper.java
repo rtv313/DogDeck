@@ -97,14 +97,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             nextLine = reader.readNext(); // Read headers
 
             while ((nextLine = reader.readNext()) != null) {
-                String origin = nextLine[1];
-                String height = nextLine[2];
-                String weight = nextLine[3];
-                String lifeSpan = nextLine[4];
-                String temperament = nextLine[5];
-                String health = nextLine[6];
-                String name = nextLine[7];
-                int id = Integer.valueOf(nextLine[8]);
+                int id = Integer.valueOf(nextLine[0]);
+                String name = nextLine[1];
+                String origin = nextLine[2];
+                String height = nextLine[3].replace("\"","") + " Inches";
+                String weight = nextLine[4];
+                String lifeSpan = nextLine[5];
+                String temperament = nextLine[6];
+                String health = nextLine[7];
 
                 ContentValues contentValue = new ContentValues();
                 contentValue.put(DatabaseHelper.ID_DOGS_BREEDS,id);
