@@ -29,13 +29,18 @@ public class DBManager {
         dbHelper.close();
     }
 
-    public void addDog(int breedOne,int breedTwo,int breedThree,int selectedBreed,String uriImage) {
+    public void addDog(int breedOne,int breedTwo,int breedThree,
+                       int percentageBreedOne,int percentageBreedTwo,
+                       int percentageBreedThree,int selectedBreed,String uriImage) {
 
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.BREED_ONE, breedOne);
-        contentValue.put(DatabaseHelper.BREED_TWO, breedTwo);
-        contentValue.put(DatabaseHelper.BREED_THREE, breedThree);
-        contentValue.put(DatabaseHelper.SELECTED_BREED, selectedBreed);
+        contentValue.put(DatabaseHelper.BREED_ONE,breedOne);
+        contentValue.put(DatabaseHelper.BREED_TWO,breedTwo);
+        contentValue.put(DatabaseHelper.BREED_THREE,breedThree);
+        contentValue.put(DatabaseHelper.PERCENTAGE_BREED_ONE,percentageBreedOne);
+        contentValue.put(DatabaseHelper.PERCENTAGE_BREED_TWO,percentageBreedTwo);
+        contentValue.put(DatabaseHelper.PERCENTAGE_BREED_THREE,percentageBreedThree);
+        contentValue.put(DatabaseHelper.SELECTED_BREED,selectedBreed);
         contentValue.put(DatabaseHelper.URI_IMAGE, uriImage);
 
         database.insert(DatabaseHelper.DOGS, null, contentValue);

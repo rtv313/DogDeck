@@ -82,7 +82,6 @@ public class DogAnalysis extends AppCompatActivity {
         }
 
         // Get Results
-
         float [] inferredValues = probabilityBuffer[0];
         HashMap<String,Float> resultsMap = new HashMap<String,Float>();
         for(int i = 0 ; i < labels.size(); i++){

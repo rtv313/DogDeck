@@ -36,6 +36,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String BREED_ONE = "breedOne";
     public static final String BREED_TWO = "breedTwo";
     public static final String BREED_THREE = "breedThree";
+    public static final String PERCENTAGE_BREED_ONE = "percentageBreedOne";
+    public static final String PERCENTAGE_BREED_TWO = "percentageBreedTwo";
+    public static final String PERCENTAGE_BREED_THREE = "percentageBreedThree";
     public static final String SELECTED_BREED = "selectedBreed";
     public static final String URI_IMAGE = "uriImage";
 
@@ -46,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     static final int DB_VERSION = 1;
 
     // Creating table DOG_BREEDS query
-    private static final String CREATE_TABLE_DOGS_BREED = "create table " + DOG_BREEDS + "("
+    private static final String CREATE_TABLE_DOGS_BREED = "CREATE TABLE " + DOG_BREEDS + "("
             + ID_DOGS + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
             + NAME + " TEXT NOT NULL,"
             + ORIGIN + " TEXT NOT NULL,"
@@ -57,11 +60,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + HEALTH + " TEXT NOT NULL" + ");";
 
     // Creating table DOGS query
-    private static final String CREATE_TABLE_DOGS= "create table " + DOGS + "("
+    private static final String CREATE_TABLE_DOGS= "CREATE TABLE " + DOGS + "("
             + ID_DOGS_BREEDS + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
             + BREED_ONE + " INTEGER NOT NULL,"
             + BREED_TWO + " INTEGER NOT NULL,"
             + BREED_THREE + " INTEGER NOT NULL,"
+            + PERCENTAGE_BREED_ONE + "FLOAT NOT NULL,"
+            + PERCENTAGE_BREED_TWO + "FLOAT NOT NULL,"
+            + PERCENTAGE_BREED_THREE + "FLOAT NOT NULL,"
             + SELECTED_BREED + " INTEGER NOT NULL,"
             + URI_IMAGE + " TEXT NOT NULL,"
             + "FOREIGN KEY" + "(" + BREED_ONE + ")" + " REFERENCES " + DOG_BREEDS  + "(\"id\"),"
