@@ -170,19 +170,19 @@ public class DogAnalysis extends AppCompatActivity {
             if (i == 0) {
                 strBreedOne = key;
                 percentageBreedOne = resultsMap.get(strBreedOne) * 100;
-                breedOne.setText(key +" "+ String.valueOf(percentageBreedOne));
+                breedOne.setText(key +" "+ String.valueOf(percentageBreedOne) + "%");
             }
 
             if (i == 1) {
                 strBreedTwo = key;
                 percentageBreedTwo = resultsMap.get(strBreedTwo) * 100;
-                breedTwo.setText(key + " " + String.valueOf(percentageBreedTwo));
+                breedTwo.setText(key + " " + String.valueOf(percentageBreedTwo) + "%");
             }
 
             if (i == 2) {
                 strBreedThree = key;
                 percentageBreedThree = resultsMap.get(strBreedThree) * 100;
-                breedThree.setText(key + " " + String.valueOf(percentageBreedThree));
+                breedThree.setText(key + " " + String.valueOf(percentageBreedThree) + "%");
             }
 
             if(i==3)
