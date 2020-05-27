@@ -18,7 +18,6 @@ import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,11 +31,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import DataBase.DBManager;
+import Models.DogData;
+
 public class DogAnalysis extends AppCompatActivity {
 
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
+    TextView height,weight,origin,lifeSpan,temperament,health;
+    String uri = "";
+    String strBreedOne,strBreedTwo,strBreedThree;
+    float percentageBreedOne,percentageBreedTwo,percentageBreedThree;
+    int selectedBreed;
     ArrayList<String> labels;
+    HashMap<String,Float> resultsMap = new HashMap<String,Float>();
+    HashMap<String,Integer> mapBreedToIndex = new HashMap<String, Integer>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,7 +55,72 @@ public class DogAnalysis extends AppCompatActivity {
         breedOne = findViewById(R.id.breedOne);
         breedTwo = findViewById(R.id.breedTwo);
         breedThree = findViewById(R.id.breedThree);
+        height = findViewById(R.id.height);
+        weight = findViewById(R.id.weight);
+        origin = findViewById(R.id.origin);
+        lifeSpan = findViewById(R.id.lifeSpan);
+        temperament = findViewById(R.id.temperament);
+        health = findViewById(R.id.health);
+
         setDogPhoto();
+        analyzeImage();
+
+    }
+
+    private void setDogPhoto(){
+        Bundle bundle = getIntent().getExtras();
+        uri = bundle.getString("imageUri");
+        Bitmap imageCameraBitmap = BitmapFactory.decodeFile(uri);
+        dogPhoto.setImageBitmap(imageCameraBitmap);
+    }
+
+    private ArrayList<String> loadLabels() throws IOException {
+        ArrayList<String> labelList = new ArrayList<String>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(this.getAssets().open("labels.txt")));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            labelList.add(line);
+        }
+        reader.close();
+        return labelList;
+    }
+
+    private HashMap<String, Float> sortByValue(HashMap<String, Float> hm)
+    {
+        // Create a list from elements of HashMap
+        List<Map.Entry<String, Float> > list = new LinkedList<Map.Entry<String, Float> >(hm.entrySet());
+
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<String, Float> >() {
+            public int compare(Map.Entry<String, Float> o1,Map.Entry<String, Float> o2)
+            {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        Collections.reverse(list);
+        // put data from sorted list to hashmap
+        HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
+        for (Map.Entry<String, Float> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+    }
+
+    private void saveResults(){
+        // Save results in database
+        DBManager dbManager = new DBManager(this,this);
+        dbManager.open();
+        int fkBreedOne = mapBreedToIndex.get(strBreedOne);
+        int fkBreedTwo = mapBreedToIndex.get(strBreedTwo);
+        int fkBreedThree = mapBreedToIndex.get(strBreedThree);
+        selectedBreed = fkBreedOne;
+        dbManager.addDog(fkBreedOne,fkBreedTwo,fkBreedThree,percentageBreedOne,percentageBreedTwo,
+                         percentageBreedThree,selectedBreed,uri);
+        dbManager.close();
+    }
+
+    private void analyzeImage(){
 
         try {
             labels = loadLabels();
@@ -83,71 +157,53 @@ public class DogAnalysis extends AppCompatActivity {
 
         // Get Results
         float [] inferredValues = probabilityBuffer[0];
-        HashMap<String,Float> resultsMap = new HashMap<String,Float>();
+
         for(int i = 0 ; i < labels.size(); i++){
             resultsMap.put(labels.get(i),inferredValues[i]);
+            mapBreedToIndex.put(labels.get(i),i+1);
         }
 
         resultsMap = sortByValue(resultsMap);
         int i = 0;
-        for(String key : resultsMap.keySet()) {
+        for(String key : resultsMap.keySet()){
 
             if (i == 0) {
-                breedOne.setText(key +" "+ String.valueOf(resultsMap.get(key) * 100));
+                strBreedOne = key;
+                percentageBreedOne = resultsMap.get(strBreedOne) * 100;
+                breedOne.setText(key +" "+ String.valueOf(percentageBreedOne));
             }
 
             if (i == 1) {
-                breedTwo.setText(key + " " + String.valueOf(resultsMap.get(key) * 100));
+                strBreedTwo = key;
+                percentageBreedTwo = resultsMap.get(strBreedTwo) * 100;
+                breedTwo.setText(key + " " + String.valueOf(percentageBreedTwo));
             }
 
             if (i == 2) {
-                breedThree.setText(key + " " + String.valueOf(resultsMap.get(key) * 100));
+                strBreedThree = key;
+                percentageBreedThree = resultsMap.get(strBreedThree) * 100;
+                breedThree.setText(key + " " + String.valueOf(percentageBreedThree));
             }
 
             if(i==3)
                 break;
-
             i++;
         }
+        saveResults();
+        setDogData();
     }
 
-    private void setDogPhoto(){
-        Bundle bundle = getIntent().getExtras();
-        String uri = bundle.getString("imageUri");
-        Bitmap imageCameraBitmap = BitmapFactory.decodeFile(uri);
-        dogPhoto.setImageBitmap(imageCameraBitmap);
-    }
+    private void setDogData(){
+        DBManager dbManager = new DBManager(this,this);
+        dbManager.open();
+        DogData dogData = dbManager.getDogData(selectedBreed);
+        dbManager.close();
 
-    private ArrayList<String> loadLabels() throws IOException {
-        ArrayList<String> labelList = new ArrayList<String>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(this.getAssets().open("labels.txt")));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            labelList.add(line);
-        }
-        reader.close();
-        return labelList;
-    }
-
-    private HashMap<String, Float> sortByValue(HashMap<String, Float> hm)
-    {
-        // Create a list from elements of HashMap
-        List<Map.Entry<String, Float> > list = new LinkedList<Map.Entry<String, Float> >(hm.entrySet());
-
-        // Sort the list
-        Collections.sort(list, new Comparator<Map.Entry<String, Float> >() {
-            public int compare(Map.Entry<String, Float> o1,Map.Entry<String, Float> o2)
-            {
-                return (o1.getValue()).compareTo(o2.getValue());
-            }
-        });
-
-        Collections.reverse(list);
-        // put data from sorted list to hashmap
-        HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
-        for (Map.Entry<String, Float> aa : list) {
-            temp.put(aa.getKey(), aa.getValue());
-        }
-        return temp;
+        height.setText("Height:" + dogData.getHeight());
+        weight.setText("Weight:" + dogData.getWeight());
+        origin.setText("Origin:" + dogData.getOrigin());
+        lifeSpan.setText("Life Span:" + dogData.getLifeSpan());
+        temperament.setText(dogData.getTemperament());
+        health.setText(dogData.getHealth());
     }
 }

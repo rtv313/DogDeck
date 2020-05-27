@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import Models.DogData;
+
 public class DBManager {
 
     private DatabaseHelper dbHelper;
@@ -30,8 +32,8 @@ public class DBManager {
     }
 
     public void addDog(int breedOne,int breedTwo,int breedThree,
-                       int percentageBreedOne,int percentageBreedTwo,
-                       int percentageBreedThree,int selectedBreed,String uriImage) {
+                       float percentageBreedOne,float percentageBreedTwo,
+                       float percentageBreedThree,int selectedBreed,String uriImage) {
 
         ContentValues contentValue = new ContentValues();
         contentValue.put(DatabaseHelper.BREED_ONE,breedOne);
@@ -57,6 +59,35 @@ public class DBManager {
         return cursor;
     }
      */
+
+    public DogData getDogData(int id){
+        String [] columns = new String[]{DatabaseHelper.NAME,DatabaseHelper.ORIGIN,
+                                         DatabaseHelper.HEIGHT,DatabaseHelper.WEIGHT,
+                                         DatabaseHelper.LIFE_SPAN,DatabaseHelper.TEMPERAMENT,
+                                         DatabaseHelper.HEALTH};
+
+        Cursor cursor = database.query(DatabaseHelper.DOG_BREEDS,columns,
+                              DatabaseHelper.ID_DOGS_BREEDS + "=" + String.valueOf(id),
+                               null,null, null,
+                              null, null);
+
+        if(cursor != null){
+            cursor.moveToFirst();
+            String name = cursor.getString(0);
+            String origin = cursor.getString(1);
+            String height = cursor.getString(2);
+            String weight = cursor.getString(3);
+            String lifeSpan = cursor.getString(4);
+            String temperament = cursor.getString(5);
+            String health = cursor.getString(6);
+            DogData dogData = new DogData(name,origin,height,weight,lifeSpan,temperament,health);
+            cursor.close();
+            return dogData;
+        }
+
+        cursor.close();
+        return null;
+    }
 
     public int updateDog(int id, int selectedBreed) {
         ContentValues contentValues = new ContentValues();
