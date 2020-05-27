@@ -29,20 +29,16 @@ public class DBManager {
         dbHelper.close();
     }
 
-    public void insert(int id,String name,String origin,String height,
-                       String weight,String lifeSpan,String temperament,String health) {
+    public void addDog(int breedOne,int breedTwo,int breedThree,int selectedBreed,String uriImage) {
 
         ContentValues contentValue = new ContentValues();
-        contentValue.put(DatabaseHelper.ID_DOGS_BREEDS,id);
-        contentValue.put(DatabaseHelper.NAME, name);
-        contentValue.put(DatabaseHelper.ORIGIN, origin);
-        contentValue.put(DatabaseHelper.HEIGHT, height);
-        contentValue.put(DatabaseHelper.WEIGHT, weight);
-        contentValue.put(DatabaseHelper.LIFE_SPAN, lifeSpan);
-        contentValue.put(DatabaseHelper.TEMPERAMENT, temperament);
-        contentValue.put(DatabaseHelper.HEALTH, health);
+        contentValue.put(DatabaseHelper.BREED_ONE, breedOne);
+        contentValue.put(DatabaseHelper.BREED_TWO, breedTwo);
+        contentValue.put(DatabaseHelper.BREED_THREE, breedThree);
+        contentValue.put(DatabaseHelper.SELECTED_BREED, selectedBreed);
+        contentValue.put(DatabaseHelper.URI_IMAGE, uriImage);
 
-        database.insert(DatabaseHelper.DOG_BREEDS, null, contentValue);
+        database.insert(DatabaseHelper.DOGS, null, contentValue);
     }
 
     /*
@@ -57,19 +53,14 @@ public class DBManager {
     }
      */
 
-    /*
-    public int update(long _id, String name, String desc) {
+    public int updateDog(int id, int selectedBreed) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.SUBJECT, name);
-        contentValues.put(DatabaseHelper.DESC, desc);
-        int i = database.update(DatabaseHelper.TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + _id, null);
+        contentValues.put(DatabaseHelper.SELECTED_BREED, selectedBreed);
+        int i = database.update(DatabaseHelper.DOGS, contentValues, DatabaseHelper.ID_DOGS + " = " + id, null);
         return i;
     }
-     */
 
-    /*
-    public void delete(long _id) {
-        database.delete(DatabaseHelper.TABLE_NAME, DatabaseHelper._ID + "=" + _id, null);
+    public void deleteDog(int id) {
+        database.delete(DatabaseHelper.DOGS, DatabaseHelper.ID_DOGS + "=" + id, null);
     }
-    */
 }
