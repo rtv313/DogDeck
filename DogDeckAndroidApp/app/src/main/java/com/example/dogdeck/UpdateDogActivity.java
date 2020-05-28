@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +19,7 @@ public class UpdateDogActivity extends AppCompatActivity {
     TextView height,weight,origin,lifeSpan,temperament,health;
     int idDog;
     Dog dog;
-    DogData dogData;
+    DogData dogDataSelected,dogDataBreedOne,dogDataBreedTwo,dogDataBreedThree;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +48,24 @@ public class UpdateDogActivity extends AppCompatActivity {
         DBManager dbManager = new DBManager(this,this);
         dbManager.open();
         dog = dbManager.getDog(idDog);
-        dogData = dbManager.getDogData(dog.getSelectedBreed());
+        dogDataSelected = dbManager.getDogData(dog.getSelectedBreed());
+        dogDataBreedOne = dbManager.getDogData(dog.getBreedOneId());
+        dogDataBreedTwo = dbManager.getDogData(dog.getBreedTwoId());
+        dogDataBreedThree = dbManager.getDogData(dog.getBreedThreeId());
         dbManager.close();
 
         Bitmap imageCameraBitmap = BitmapFactory.decodeFile(dog.getUriImage());
         dogPhoto.setImageBitmap(imageCameraBitmap);
-        height.setText("Height:" + dogData.getHeight());
-        weight.setText("Weight:" + dogData.getWeight());
-        origin.setText("Origin:" + dogData.getOrigin());
-        lifeSpan.setText("Life Span:" + dogData.getLifeSpan());
-        temperament.setText(dogData.getTemperament());
-        health.setText(dogData.getHealth());
+
+        breedOne.setText(dogDataBreedOne.getName() + " : " + dog.getPercentageBreedOne());
+        breedTwo.setText(dogDataBreedTwo.getName() + " : " + dog.getPercentageBreedTwo());
+        breedThree.setText(dogDataBreedThree.getName() + " : " + dog.getPercentageBreedThree());
+
+        height.setText("Height:" + dogDataSelected.getHeight());
+        weight.setText("Weight:" + dogDataSelected.getWeight());
+        origin.setText("Origin:" + dogDataSelected.getOrigin());
+        lifeSpan.setText("Life Span:" + dogDataSelected.getLifeSpan());
+        temperament.setText(dogDataSelected.getTemperament());
+        health.setText(dogDataSelected.getHealth());
     }
 }

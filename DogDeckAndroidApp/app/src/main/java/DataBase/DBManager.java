@@ -137,27 +137,27 @@ public class DBManager {
     private Dog createDog(Cursor cursor){
 
         int id_dog = cursor.getInt(0);
-        int breedOne = cursor.getInt(1);
-        int breedTwo = cursor.getInt(2);
-        int breedThree = cursor.getInt(3);
+        int breedOneId = cursor.getInt(1);
+        int breedTwoId = cursor.getInt(2);
+        int breedThreeId = cursor.getInt(3);
         float percentageBreedOne = cursor.getFloat(4);
         float percentageBreedTwo = cursor.getFloat(5);
         float percentageBreedThree = cursor.getFloat(6);
         int selectedBreed = cursor.getInt(7);
         String uriImage = cursor.getString(8);
 
-        DogData breedDogOne = getDogData(breedOne);
-        DogData breedDogTwo = getDogData(breedTwo);
-        DogData breedDogThree = getDogData(breedThree);
+        DogData breedDogOne = getDogData(breedOneId);
+        DogData breedDogTwo = getDogData(breedTwoId);
+        DogData breedDogThree = getDogData(breedThreeId);
         DogData selected = null;
 
-        if(breedOne == selectedBreed)
+        if(breedOneId == selectedBreed)
             selected = breedDogOne;
 
-        if(breedTwo == selectedBreed)
+        if(breedTwoId == selectedBreed)
             selected = breedDogTwo;
 
-        if(breedThree == selectedBreed)
+        if(breedThreeId == selectedBreed)
             selected = breedDogThree;
 
 
@@ -170,7 +170,8 @@ public class DBManager {
         String selectedBreedStr = selected.getName();
 
         Dog dog = new Dog(id_dog,breedOneStr,breedTwoStr,breedThreeStr,percentageBreedOneStr
-                ,percentageBreedTwoStr,percentageThreeStr,uriImage,selectedBreedStr,selectedBreed);
+                ,percentageBreedTwoStr,percentageThreeStr,uriImage,selectedBreedStr,selectedBreed,
+                breedOneId,breedTwoId,breedThreeId);
 
         return  dog;
     }

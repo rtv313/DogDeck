@@ -7,14 +7,18 @@ public class Dog {
     public String breedThree;
     public String percentageBreedOne;
     public String percentageBreedTwo;
-    public String percentageThree ;
+    public String percentageBreedThree;
     public String selectedBreedStr;
     public int selectedBreed;
     public String uriImage;
+    public int breedOneId;
+    public int breedTwoId;
+    public int breedThreeId;
 
     public Dog(int id,String breedOne,String breedTwo,String breedThree,String percentageBreedOne,
                String percentageBreedTwo, String percentageBreedThree,String uriImage,
-               String selectedBreedStr,int selectedBreed){
+               String selectedBreedStr,int selectedBreed,int breedOneId,int breedTwoId,
+               int breedThreeId){
 
         this.id = id;
         this.breedOne = breedOne;
@@ -22,10 +26,37 @@ public class Dog {
         this.breedThree = breedThree;
         this.percentageBreedOne = percentageBreedOne;
         this.percentageBreedTwo = percentageBreedTwo;
-        this.percentageThree = percentageBreedThree;
+        this.percentageBreedThree = percentageBreedThree;
         this.uriImage = uriImage;
         this.selectedBreedStr = selectedBreedStr;
         this.selectedBreed = selectedBreed;
+        this.breedOneId = breedOneId;
+        this.breedTwoId = breedTwoId;
+        this.breedThreeId = breedThreeId;
+    }
+
+    public int getBreedOneId() {
+        return breedOneId;
+    }
+
+    public void setBreedOneId(int breedOneId) {
+        this.breedOneId = breedOneId;
+    }
+
+    public int getBreedTwoId() {
+        return breedTwoId;
+    }
+
+    public void setBreedTwoId(int breedTwoId) {
+        this.breedTwoId = breedTwoId;
+    }
+
+    public int getBreedThreeId() {
+        return breedThreeId;
+    }
+
+    public void setBreedThreeId(int breedThreeId) {
+        this.breedThreeId = breedThreeId;
     }
 
     public int getId() {
@@ -76,12 +107,12 @@ public class Dog {
         this.percentageBreedTwo = percentageBreedTwo;
     }
 
-    public String getPercentageThree() {
-        return percentageThree;
+    public String getPercentageBreedThree() {
+        return percentageBreedThree;
     }
 
-    public void setPercentageThree(String percentageThree) {
-        this.percentageThree = percentageThree;
+    public void setPercentageBreedThree(String percentageBreedThree) {
+        this.percentageBreedThree = percentageBreedThree;
     }
 
     public String getSelectedBreedStr() {
