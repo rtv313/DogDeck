@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dogdeck.DogAnalysisActivity"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,70 +21,82 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dogPhoto"/>
+
     <TextView
         android:id="@+id/breedOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Breed1"/>
 
     <TextView
         android:id="@+id/breedTwo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Breed2"/>
 
     <TextView
         android:id="@+id/breedThree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Breed3"/>
 
     <TextView
         android:id="@+id/origin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Origin"/>
 
     <TextView
         android:id="@+id/height"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Height"/>
 
     <TextView
         android:id="@+id/weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Weight"/>
 
     <TextView
         android:id="@+id/lifeSpan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Life Span"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30dp"
+        android:textColor="@color/black"
         android:text="Temperament:"/>
 
     <TextView
         android:id="@+id/temperament"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Temperament"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30dp"
+        android:textColor="@color/black"
         android:text="Health:"/>
 
     <TextView
         android:id="@+id/health"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="health"/>
 
     </LinearLayout>
