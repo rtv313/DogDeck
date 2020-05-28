@@ -1,7 +1,5 @@
 package Models;
 
-import com.example.dogdeck.DogAnalysis;
-
 public class DogData {
     public String name = "name";
     public String origin = "origin";

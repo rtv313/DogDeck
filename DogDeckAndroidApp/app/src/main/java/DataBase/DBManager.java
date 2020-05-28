@@ -7,6 +7,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.LinkedList;
+
+import Models.Dog;
 import Models.DogData;
 
 public class DBManager {
@@ -96,6 +99,65 @@ public class DBManager {
         contentValues.put(DatabaseHelper.SELECTED_BREED, selectedBreed);
         int i = database.update(DatabaseHelper.DOGS, contentValues, DatabaseHelper.ID_DOGS + " = " + id, null);
         return i;
+    }
+
+    public LinkedList<Dog> getDogs(){
+
+        LinkedList <Dog> dogs = new <Dog> LinkedList();
+
+        String [] columns = new String[]{
+                DatabaseHelper.ID_DOGS,DatabaseHelper.BREED_ONE,
+                DatabaseHelper.BREED_TWO,DatabaseHelper.BREED_THREE,
+                DatabaseHelper.PERCENTAGE_BREED_ONE,DatabaseHelper.PERCENTAGE_BREED_TWO,
+                DatabaseHelper.PERCENTAGE_BREED_THREE,DatabaseHelper.SELECTED_BREED,
+                DatabaseHelper.URI_IMAGE};
+
+        Cursor cursor = database.query(DatabaseHelper.DOGS,columns,
+                null,null, null,null
+                , DatabaseHelper.ID_DOGS + " DESC");
+
+        if(cursor.moveToNext()){
+
+             int id_dog = cursor.getInt(0);
+             int breedOne = cursor.getInt(1);
+             int breedTwo = cursor.getInt(2);
+             int breedThree = cursor.getInt(3);
+             float percentageBreedOne = cursor.getFloat(4);
+             float percentageBreedTwo = cursor.getFloat(5);
+             float percentageBreedThree = cursor.getFloat(6);
+             int selectedBreed = cursor.getInt(7);
+             String uriImage = cursor.getString(8);
+
+             DogData breedDogOne = getDogData(breedOne);
+             DogData breedDogTwo = getDogData(breedTwo);
+             DogData breedDogThree = getDogData(breedThree);
+             DogData selected = null;
+
+             if(breedOne == selectedBreed)
+                 selected = breedDogOne;
+
+             if(breedTwo == selectedBreed)
+                 selected = breedDogTwo;
+
+             if(breedThree == selectedBreed)
+                 selected = breedDogThree;
+
+
+            String breedOneStr = breedDogOne.getName();
+            String breedTwoStr = breedDogTwo.getName();
+            String breedThreeStr = breedDogThree.getName();
+            String percentageBreedOneStr = String.valueOf(percentageBreedOne).substring(0,5) + "%";
+            String percentageBreedTwoStr = String.valueOf(percentageBreedTwo).substring(0,5) + "%";
+            String percentageThreeStr = String.valueOf(percentageBreedThree).substring(0,5) + "%";
+            String selectedBreedStr = selected.getName();
+
+            Dog dogItem = new Dog(id_dog,breedOneStr,breedTwoStr,breedThreeStr,percentageBreedOneStr
+            ,percentageBreedTwoStr,percentageThreeStr,uriImage,selectedBreedStr);
+
+            dogs.add(dogItem);
+        }
+        cursor.close();
+        return dogs;
     }
 
     public void deleteDog(int id) {

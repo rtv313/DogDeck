@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.common.FileUtil;
@@ -36,7 +35,7 @@ import java.util.Map;
 import DataBase.DBManager;
 import Models.DogData;
 
-public class DogAnalysis extends AppCompatActivity {
+public class DogAnalysisActivity extends AppCompatActivity {
 
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
@@ -49,6 +48,7 @@ public class DogAnalysis extends AppCompatActivity {
     ArrayList<String> labels;
     HashMap<String,Float> resultsMap = new HashMap<String,Float>();
     HashMap<String,Integer> mapBreedToIndex = new HashMap<String, Integer>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

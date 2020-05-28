@@ -11,7 +11,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -23,7 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,24 +33,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+
+import DataBase.DBManager;
+import Models.Dog;
 
 public class MyDogsActivity extends AppCompatActivity {
 
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
     private FloatingActionButton addDogFab;
-    private ImageView imgView;
-    private LinearLayout linearLayout;
+    private ListView dogsListView;
     private String newDogPhotoPath;
+    private LinkedList<Dog> dogsList;
+    private DogsListAdapter dogsListAdapter;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
-        linearLayout = findViewById(R.id.relative_layout);
+
+        dogsListView = findViewById(R.id.dogsList);
         addDogFab =  findViewById(R.id.add_dog);
-        imgView =  findViewById(R.id.imageView1);
+        loadDogs();
 
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -143,7 +148,7 @@ public class MyDogsActivity extends AppCompatActivity {
             }
 
             // Start Dog Analysis Activity
-            Intent intent = new Intent(MyDogsActivity.this, DogAnalysis.class);
+            Intent intent = new Intent(MyDogsActivity.this, DogAnalysisActivity.class);
             Bundle b = new Bundle();
             b.putString("imageUri", newDogPhotoPath); //Your id
             intent.putExtras(b); //Put your id to your next Intent
@@ -222,5 +227,14 @@ public class MyDogsActivity extends AppCompatActivity {
         fos.flush();
         fos.close();
         return image.getAbsolutePath();
+    }
+
+    private void loadDogs(){
+        DBManager dbManager = new DBManager(this,this);
+        dbManager.open();
+        dogsList = dbManager.getDogs();
+        dbManager.close();
+        dogsListAdapter = new DogsListAdapter(getApplicationContext(),dogsList,this);
+        dogsListView.setAdapter(dogsListAdapter);
     }
 }
