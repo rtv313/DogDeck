@@ -31,7 +31,7 @@ public class DBManager {
         dbHelper.close();
     }
 
-    public void addDog(int breedOne,int breedTwo,int breedThree,
+    public int addDog(int breedOne,int breedTwo,int breedThree,
                        float percentageBreedOne,float percentageBreedTwo,
                        float percentageBreedThree,int selectedBreed,String uriImage) {
 
@@ -45,7 +45,9 @@ public class DBManager {
         contentValue.put(DatabaseHelper.SELECTED_BREED,selectedBreed);
         contentValue.put(DatabaseHelper.URI_IMAGE, uriImage);
 
-        database.insert(DatabaseHelper.DOGS, null, contentValue);
+        int id = (int)database.insert(DatabaseHelper.DOGS, null, contentValue);
+
+        return id;
     }
 
     /*

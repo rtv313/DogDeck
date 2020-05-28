@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -45,6 +45,7 @@ public class DogAnalysis extends AppCompatActivity {
     String strBreedOne,strBreedTwo,strBreedThree;
     float percentageBreedOne,percentageBreedTwo,percentageBreedThree;
     int selectedBreed;
+    int idDogCreated;
     ArrayList<String> labels;
     HashMap<String,Float> resultsMap = new HashMap<String,Float>();
     HashMap<String,Integer> mapBreedToIndex = new HashMap<String, Integer>();
@@ -62,7 +63,6 @@ public class DogAnalysis extends AppCompatActivity {
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
         health = findViewById(R.id.health);
-
         setDogPhoto();
         analyzeImage();
         dogsBreedsListeners();
@@ -116,7 +116,7 @@ public class DogAnalysis extends AppCompatActivity {
         int fkBreedTwo = mapBreedToIndex.get(strBreedTwo);
         int fkBreedThree = mapBreedToIndex.get(strBreedThree);
         selectedBreed = fkBreedOne;
-        dbManager.addDog(fkBreedOne,fkBreedTwo,fkBreedThree,percentageBreedOne,percentageBreedTwo,
+        idDogCreated = dbManager.addDog(fkBreedOne,fkBreedTwo,fkBreedThree,percentageBreedOne,percentageBreedTwo,
                          percentageBreedThree,selectedBreed,uri);
         dbManager.close();
     }
@@ -214,6 +214,7 @@ public class DogAnalysis extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedOne);
                 setDogData();
+                updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
 
@@ -222,6 +223,7 @@ public class DogAnalysis extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedTwo);
                 setDogData();
+                updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
 
@@ -230,7 +232,15 @@ public class DogAnalysis extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedThree);
                 setDogData();
+                updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
+    }
+
+    private void updateSelectedBreed(int dogId,int selectedBreedId){
+        DBManager dbManager = new DBManager(this,this);
+        dbManager.open();
+        dbManager.updateDog(dogId,selectedBreedId);
+        dbManager.close();
     }
 }
