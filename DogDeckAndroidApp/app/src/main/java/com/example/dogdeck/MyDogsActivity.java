@@ -237,4 +237,10 @@ public class MyDogsActivity extends AppCompatActivity {
         dogsListAdapter = new DogsListAdapter(getApplicationContext(),dogsList,this);
         dogsListView.setAdapter(dogsListAdapter);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadDogs();
+    }
 }

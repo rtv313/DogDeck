@@ -116,7 +116,7 @@ public class DBManager {
                 null,null, null,null
                 , DatabaseHelper.ID_DOGS + " DESC");
 
-        if(cursor.moveToNext()){
+        while(cursor.moveToNext()){
 
              int id_dog = cursor.getInt(0);
              int breedOne = cursor.getInt(1);
