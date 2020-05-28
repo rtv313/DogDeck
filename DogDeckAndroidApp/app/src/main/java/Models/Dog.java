@@ -14,7 +14,7 @@ public class Dog {
 
     public Dog(int id,String breedOne,String breedTwo,String breedThree,String percentageBreedOne,
                String percentageBreedTwo, String percentageBreedThree,String uriImage,
-               String selectedBreedStr){
+               String selectedBreedStr,int selectedBreed){
 
         this.id = id;
         this.breedOne = breedOne;
@@ -25,6 +25,7 @@ public class Dog {
         this.percentageThree = percentageBreedThree;
         this.uriImage = uriImage;
         this.selectedBreedStr = selectedBreedStr;
+        this.selectedBreed = selectedBreed;
     }
 
     public int getId() {
