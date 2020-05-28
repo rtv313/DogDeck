@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -48,7 +50,6 @@ public class DogAnalysis extends AppCompatActivity {
     HashMap<String,Integer> mapBreedToIndex = new HashMap<String, Integer>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_analysis);
         dogPhoto = findViewById(R.id.dogPhoto);
@@ -64,7 +65,7 @@ public class DogAnalysis extends AppCompatActivity {
 
         setDogPhoto();
         analyzeImage();
-
+        dogsBreedsListeners();
     }
 
     private void setDogPhoto(){
@@ -205,5 +206,31 @@ public class DogAnalysis extends AppCompatActivity {
         lifeSpan.setText("Life Span:" + dogData.getLifeSpan());
         temperament.setText(dogData.getTemperament());
         health.setText(dogData.getHealth());
+    }
+
+    private void dogsBreedsListeners(){
+        breedOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedBreed =  mapBreedToIndex.get(strBreedOne);
+                setDogData();
+            }
+        });
+
+        breedTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedBreed =  mapBreedToIndex.get(strBreedTwo);
+                setDogData();
+            }
+        });
+
+        breedThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedBreed =  mapBreedToIndex.get(strBreedThree);
+                setDogData();
+            }
+        });
     }
 }
