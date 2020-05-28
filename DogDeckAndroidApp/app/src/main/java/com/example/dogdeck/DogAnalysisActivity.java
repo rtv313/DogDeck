@@ -63,6 +63,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
         health = findViewById(R.id.health);
+        breedOne.setTextColor(getResources().getColor(R.color.red));
         setDogPhoto();
         analyzeImage();
         dogsBreedsListeners();
@@ -214,6 +215,9 @@ public class DogAnalysisActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedOne);
                 setDogData();
+                breedOne.setTextColor(getResources().getColor(R.color.red));
+                breedTwo.setTextColor(getResources().getColor(R.color.black));
+                breedThree.setTextColor(getResources().getColor(R.color.black));
                 updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
@@ -223,6 +227,9 @@ public class DogAnalysisActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedTwo);
                 setDogData();
+                breedOne.setTextColor(getResources().getColor(R.color.black));
+                breedTwo.setTextColor(getResources().getColor(R.color.red));
+                breedThree.setTextColor(getResources().getColor(R.color.black));
                 updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
@@ -232,6 +239,9 @@ public class DogAnalysisActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedThree);
                 setDogData();
+                breedOne.setTextColor(getResources().getColor(R.color.black));
+                breedTwo.setTextColor(getResources().getColor(R.color.black));
+                breedThree.setTextColor(getResources().getColor(R.color.red));
                 updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
