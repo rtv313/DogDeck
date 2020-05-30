@@ -79,7 +79,7 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
         }
 
         private void createListeners(MyViewHolder holder, final Dog dog){
-            holder.name.setOnClickListener(new View.OnClickListener() {
+            holder.viewForeground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, UpdateDogActivity.class);
