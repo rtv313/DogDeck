@@ -53,11 +53,10 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
             final Dog dog = dogList.get(position);
-
             Bitmap imageCameraBitmap = BitmapFactory.decodeFile(dog.getUriImage());
             holder.thumbnail.setImageBitmap(imageCameraBitmap);
             holder.name.setText(dog.getSelectedBreedStr());
-            createListeners(holder,position);
+            createListeners(holder,dog);
         }
 
         @Override
@@ -79,11 +78,10 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
             notifyItemInserted(position);
         }
 
-        private void createListeners(MyViewHolder holder,final int position){
+        private void createListeners(MyViewHolder holder, final Dog dog){
             holder.name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Dog dog  = dogList.get(position);
                     Intent intent = new Intent(context, UpdateDogActivity.class);
                     Bundle b = new Bundle();
                     b.putInt("idDog", dog.getId()); //Your id

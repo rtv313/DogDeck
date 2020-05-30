@@ -264,9 +264,8 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
             // backup of removed item for undo purpose
             final Dog deletedDog= dogsRVList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
-
             // remove the item from recycler view
-            deleteDog(deletedDog);
+            deleteDog(deletedDog,deletedIndex);
             mAdapter.removeItem(viewHolder.getAdapterPosition());
         }
     }
@@ -280,11 +279,13 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void deleteDog(Dog deletedDog){
+    private void deleteDog(Dog deletedDog,int position){
+        // Remove from database
         DBManager dbManager = new DBManager(this,this);
         dbManager.open();
         dbManager.deleteDog(deletedDog.getId());
         dbManager.close();
+        // Remove Image File
         String filePath = deletedDog.getUriImage();
         File file = new File(filePath);
         file.delete();
