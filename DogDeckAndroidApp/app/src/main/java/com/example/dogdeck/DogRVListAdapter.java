@@ -1,12 +1,16 @@
 package com.example.dogdeck;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,46 +18,44 @@ import java.util.List;
 
 import Models.Dog;
 
-public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyViewHolder> {
+public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyViewHolder> {
         private Context context;
         private List<Dog> dogList;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView name, description, price;
+            public TextView name;
             public ImageView thumbnail;
-            public RelativeLayout viewBackground, viewForeground;
+            public RelativeLayout viewBackground;
+            public LinearLayout viewForeground;
 
             public MyViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.name);
-                description = view.findViewById(R.id.description);
-                price = view.findViewById(R.id.price);
                 thumbnail = view.findViewById(R.id.thumbnail);
                 viewBackground = view.findViewById(R.id.view_background);
                 viewForeground = view.findViewById(R.id.view_foreground);
             }
         }
 
-
-        public CartListAdapter(Context context, List<Dog> cartList) {
+        public DogRVListAdapter(Context context, List<Dog> dogList) {
             this.context = context;
-            this.dogList = cartList;
+            this.dogList = dogList;
         }
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.dog_rv_item, parent, false);
-
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.dog_rv_item, parent, false);
             return new MyViewHolder(itemView);
         }
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            final Dog item = dogList.get(position);
-            holder.name.setText(item.getSelectedBreedStr());
-            holder.description.setText(item.getSelectedBreedStr());
-            holder.price.setText("₹" + item.getSelectedBreedStr());
+            final Dog dog = dogList.get(position);
+
+            Bitmap imageCameraBitmap = BitmapFactory.decodeFile(dog.getUriImage());
+            holder.thumbnail.setImageBitmap(imageCameraBitmap);
+            holder.name.setText(dog.getSelectedBreedStr());
+            createListeners(holder,position);
         }
 
         @Override
@@ -73,5 +75,14 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyView
             dogList.add(position, item);
             // notify item added by position
             notifyItemInserted(position);
+        }
+
+        private void createListeners(MyViewHolder holder,final int position){
+            holder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Hola mundo " + String.valueOf(position), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 }

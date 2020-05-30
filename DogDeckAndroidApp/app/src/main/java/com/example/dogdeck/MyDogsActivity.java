@@ -16,7 +16,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -57,10 +56,10 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     private LinkedList<Dog> dogsList;
     private DogsListAdapter dogsListAdapter;
 
-
+/////////////////////////////////////////////////////////7
     private RecyclerView recyclerView;
-    private List<Dog> cartList;
-    private CartListAdapter mAdapter;
+    private LinkedList<Dog> dogsRVList;
+    private DogRVListAdapter mAdapter;
     private LinearLayout coordinatorLayout;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -70,11 +69,12 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         setContentView(R.layout.activity_my_dogs);
 
         //dogsListView = findViewById(R.id.dogsList);
-        //addDogFab =  findViewById(R.id.add_dog);
+        addDogFab =  findViewById(R.id.add_dog);
+
+
         //loadDogs();
 
 
-        /*
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -87,19 +87,15 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
                 }
                 return true;
             }
-        }); */
-
+        });
 
         recyclerView = findViewById(R.id.recycler_view);
         coordinatorLayout = findViewById(R.id.coordinator_layout);
-        cartList = new ArrayList<>();
-        mAdapter = new CartListAdapter(this, cartList);
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(mAdapter);
+
 
         // adding item touch helper
         // only ItemTouchHelper.LEFT added to detect Right to Left swipe
@@ -107,7 +103,8 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-        prepareCart();
+
+        dogsRVLoadData();
     }
 
     private void showPopUpMediaOptions(){
@@ -283,52 +280,25 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof CartListAdapter.MyViewHolder) {
+        if (viewHolder instanceof DogRVListAdapter.MyViewHolder) {
             // get the removed item name to display it in snack bar
-            String name = cartList.get(viewHolder.getAdapterPosition()).getSelectedBreedStr();
+            String name = dogsRVList.get(viewHolder.getAdapterPosition()).getSelectedBreedStr();
 
             // backup of removed item for undo purpose
-            final Dog deletedItem = cartList.get(viewHolder.getAdapterPosition());
+            final Dog deletedItem = dogsRVList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
             mAdapter.removeItem(viewHolder.getAdapterPosition());
-
-            // showing snack bar with Undo option
-            /*
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
-            snackbar.setAction("UNDO", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    // undo is selected, restore the deleted item
-                    mAdapter.restoreItem(deletedItem, deletedIndex);
-                }
-            });
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();*/
         }
     }
 
-    private void prepareCart() {
-
-        int id = 1;
-        String breedOne = "Perro";
-        String breedTwo = "Perro";
-        String breedThree = "Perro";
-        String percentageBreedOne = "Perro";
-        String percentageBreedTwo = "Perro";
-        String percentageBreedThree = "Perro";
-        String uriImage = "Perro";
-        String selectedBreedStr = "Perro";
-        int selectedBreed = 3;
-        int breedOneId = 3;
-        int breedTwoId = 3;
-        int breedThreeId = 3;
-
-        Dog dog = new Dog(1,breedOne,breedTwo,breedThree,percentageBreedOne,percentageBreedTwo,
-                percentageBreedThree,uriImage,selectedBreedStr,selectedBreed,breedOneId,
-                breedTwoId,breedThreeId);
-        cartList.add(dog);
+    private void dogsRVLoadData(){
+        DBManager dbManager = new DBManager(this,this);
+        dbManager.open();
+        dogsRVList = dbManager.getDogs();
+        dbManager.close();
+        mAdapter = new DogRVListAdapter(this, dogsRVList);
+        recyclerView.setAdapter(mAdapter);
     }
 }
