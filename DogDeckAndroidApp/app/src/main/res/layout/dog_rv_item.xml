@@ -19,7 +19,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_add_fab" />
+            android:src="@drawable/ic_delete_white_30dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,9 +27,9 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/delete_icon"
-            android:text="delete"
-            android:textColor="@color/black"
-            android:textSize="13dp" />
+            android:text="Delete"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
     </RelativeLayout>
 

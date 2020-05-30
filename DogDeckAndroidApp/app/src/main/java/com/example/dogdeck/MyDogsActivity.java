@@ -50,10 +50,6 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     private static final int CAMERA_REQUEST = 2;
     private FloatingActionButton addDogFab;
     private String newDogPhotoPath;
-    private LinkedList<Dog> dogsList;
-    private DogsListAdapter dogsListAdapter;
-
-/////////////////////////////////////////////////////////7
     private RecyclerView recyclerView;
     private LinkedList<Dog> dogsRVList;
     private DogRVListAdapter mAdapter;
