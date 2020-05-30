@@ -1,5 +1,6 @@
 package com.example.dogdeck;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,13 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import DataBase.DBManager;
 import Models.Dog;
+import Models.DogData;
 
 public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyViewHolder> {
         private Context context;
@@ -26,6 +28,8 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView name;
+            public TextView origin;
+            public TextView percentages;
             public ImageView thumbnail;
             public RelativeLayout viewBackground;
             public LinearLayout viewForeground;
@@ -33,6 +37,8 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
             public MyViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.name);
+                origin = view.findViewById(R.id.origin);
+                percentages = view.findViewById(R.id.percentages);
                 thumbnail = view.findViewById(R.id.thumbnail);
                 viewBackground = view.findViewById(R.id.view_background);
                 viewForeground = view.findViewById(R.id.view_foreground);
@@ -56,6 +62,14 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
             Bitmap imageCameraBitmap = BitmapFactory.decodeFile(dog.getUriImage());
             holder.thumbnail.setImageBitmap(imageCameraBitmap);
             holder.name.setText(dog.getSelectedBreedStr());
+            DBManager dbManager = new DBManager(context,(Activity)context);
+            dbManager.open();
+            DogData data = dbManager.getDogData(dog.getSelectedBreed());
+            dbManager.close();
+            holder.origin.setText(data.getOrigin());
+            holder.percentages.setText(dog.getPercentageBreedOne() + "/" +
+                                       dog.getPercentageBreedTwo() + "/" +
+                                       dog.getPercentageBreedThree());
             createListeners(holder,dog);
         }
 

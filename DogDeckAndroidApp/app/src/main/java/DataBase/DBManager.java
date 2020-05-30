@@ -164,9 +164,9 @@ public class DBManager {
         String breedOneStr = breedDogOne.getName();
         String breedTwoStr = breedDogTwo.getName();
         String breedThreeStr = breedDogThree.getName();
-        String percentageBreedOneStr = String.valueOf(percentageBreedOne).substring(0,5) + "%";
-        String percentageBreedTwoStr = String.valueOf(percentageBreedTwo).substring(0,5) + "%";
-        String percentageThreeStr = String.valueOf(percentageBreedThree).substring(0,5) + "%";
+        String percentageBreedOneStr = String.valueOf(percentageBreedOne).substring(0,5);
+        String percentageBreedTwoStr = String.valueOf(percentageBreedTwo).substring(0,5);
+        String percentageThreeStr = String.valueOf(percentageBreedThree).substring(0,5);
         String selectedBreedStr = selected.getName();
 
         Dog dog = new Dog(id_dog,breedOneStr,breedTwoStr,breedThreeStr,percentageBreedOneStr

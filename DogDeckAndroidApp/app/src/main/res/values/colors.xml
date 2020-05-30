@@ -7,4 +7,5 @@
     <color name="redLight">#EC6165</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="gray">#CCCCCC</color>
 </resources>

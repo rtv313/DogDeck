@@ -6,31 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/gray"
     tools:context=".MyDogsActivity">
 
-        <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ListView
-                android:id="@+id/dogsList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:dividerHeight="1dp"
-                android:footerDividersEnabled="false" />
-
-        </LinearLayout> -->
-
     <include layout="@layout/content_main" />
-
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -40,8 +23,6 @@
             android:overScrollMode="never" />
 
     </FrameLayout>
-
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_dog"
