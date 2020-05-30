@@ -28,7 +28,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,10 +37,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
+
 
 import DataBase.DBManager;
 import Models.Dog;
@@ -51,7 +49,6 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
     private FloatingActionButton addDogFab;
-    private ListView dogsListView;
     private String newDogPhotoPath;
     private LinkedList<Dog> dogsList;
     private DogsListAdapter dogsListAdapter;
@@ -67,13 +64,7 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
-
-        //dogsListView = findViewById(R.id.dogsList);
         addDogFab =  findViewById(R.id.add_dog);
-
-
-        //loadDogs();
-
 
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -96,14 +87,12 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-
         // adding item touch helper
         // only ItemTouchHelper.LEFT added to detect Right to Left swipe
         // if you want both Right -> Left and Left -> Right
         // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-
         dogsRVLoadData();
     }
 
@@ -263,32 +252,21 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         return image.getAbsolutePath();
     }
 
-    private void loadDogs(){
-        DBManager dbManager = new DBManager(this,this);
-        dbManager.open();
-        dogsList = dbManager.getDogs();
-        dbManager.close();
-        dogsListAdapter = new DogsListAdapter(getApplicationContext(),dogsList,this);
-        dogsListView.setAdapter(dogsListAdapter);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        //loadDogs();
+        dogsRVLoadData();
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof DogRVListAdapter.MyViewHolder) {
-            // get the removed item name to display it in snack bar
-            String name = dogsRVList.get(viewHolder.getAdapterPosition()).getSelectedBreedStr();
-
             // backup of removed item for undo purpose
-            final Dog deletedItem = dogsRVList.get(viewHolder.getAdapterPosition());
+            final Dog deletedDog= dogsRVList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
+            deleteDog(deletedDog);
             mAdapter.removeItem(viewHolder.getAdapterPosition());
         }
     }
@@ -300,5 +278,15 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         dbManager.close();
         mAdapter = new DogRVListAdapter(this, dogsRVList);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void deleteDog(Dog deletedDog){
+        DBManager dbManager = new DBManager(this,this);
+        dbManager.open();
+        dbManager.deleteDog(deletedDog.getId());
+        dbManager.close();
+        String filePath = deletedDog.getUriImage();
+        File file = new File(filePath);
+        file.delete();
     }
 }

@@ -1,8 +1,10 @@
 package com.example.dogdeck;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +83,12 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
             holder.name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Hola mundo " + String.valueOf(position), Toast.LENGTH_SHORT).show();
+                    Dog dog  = dogList.get(position);
+                    Intent intent = new Intent(context, UpdateDogActivity.class);
+                    Bundle b = new Bundle();
+                    b.putInt("idDog", dog.getId()); //Your id
+                    intent.putExtras(b); //Put your id to your next Intent
+                    context.startActivity(intent);
                 }
             });
         }
