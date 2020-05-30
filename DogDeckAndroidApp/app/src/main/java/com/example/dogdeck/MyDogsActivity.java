@@ -4,6 +4,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,6 +16,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,13 +39,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import DataBase.DBManager;
 import Models.Dog;
 
-public class MyDogsActivity extends AppCompatActivity {
+public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
@@ -48,16 +57,24 @@ public class MyDogsActivity extends AppCompatActivity {
     private LinkedList<Dog> dogsList;
     private DogsListAdapter dogsListAdapter;
 
+
+    private RecyclerView recyclerView;
+    private List<Dog> cartList;
+    private CartListAdapter mAdapter;
+    private LinearLayout coordinatorLayout;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
 
-        dogsListView = findViewById(R.id.dogsList);
-        addDogFab =  findViewById(R.id.add_dog);
-        loadDogs();
+        //dogsListView = findViewById(R.id.dogsList);
+        //addDogFab =  findViewById(R.id.add_dog);
+        //loadDogs();
 
+
+        /*
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -70,7 +87,27 @@ public class MyDogsActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        });
+        }); */
+
+
+        recyclerView = findViewById(R.id.recycler_view);
+        coordinatorLayout = findViewById(R.id.coordinator_layout);
+        cartList = new ArrayList<>();
+        mAdapter = new CartListAdapter(this, cartList);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(mAdapter);
+
+        // adding item touch helper
+        // only ItemTouchHelper.LEFT added to detect Right to Left swipe
+        // if you want both Right -> Left and Left -> Right
+        // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+        prepareCart();
     }
 
     private void showPopUpMediaOptions(){
@@ -241,6 +278,57 @@ public class MyDogsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadDogs();
+        //loadDogs();
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof CartListAdapter.MyViewHolder) {
+            // get the removed item name to display it in snack bar
+            String name = cartList.get(viewHolder.getAdapterPosition()).getSelectedBreedStr();
+
+            // backup of removed item for undo purpose
+            final Dog deletedItem = cartList.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from recycler view
+            mAdapter.removeItem(viewHolder.getAdapterPosition());
+
+            // showing snack bar with Undo option
+            /*
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+                    mAdapter.restoreItem(deletedItem, deletedIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();*/
+        }
+    }
+
+    private void prepareCart() {
+
+        int id = 1;
+        String breedOne = "Perro";
+        String breedTwo = "Perro";
+        String breedThree = "Perro";
+        String percentageBreedOne = "Perro";
+        String percentageBreedTwo = "Perro";
+        String percentageBreedThree = "Perro";
+        String uriImage = "Perro";
+        String selectedBreedStr = "Perro";
+        int selectedBreed = 3;
+        int breedOneId = 3;
+        int breedTwoId = 3;
+        int breedThreeId = 3;
+
+        Dog dog = new Dog(1,breedOne,breedTwo,breedThree,percentageBreedOne,percentageBreedTwo,
+                percentageBreedThree,uriImage,selectedBreedStr,selectedBreed,breedOneId,
+                breedTwoId,breedThreeId);
+        cartList.add(dog);
     }
 }
