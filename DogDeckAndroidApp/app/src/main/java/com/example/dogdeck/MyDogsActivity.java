@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -96,8 +97,8 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         final Dialog openDialog = new Dialog(MyDogsActivity.this);
         openDialog.setContentView(R.layout.select_camera_or_gallery_dialog);
         openDialog.setTitle("Custom Dialog Box");
-        Button camera = openDialog.findViewById(R.id.cameraBtn);
-        Button gallery = openDialog.findViewById(R.id.galleryBtn);
+        ImageButton camera = openDialog.findViewById(R.id.cameraBtn);
+        ImageButton gallery = openDialog.findViewById(R.id.galleryBtn);
 
         gallery.setOnClickListener(new View.OnClickListener(){
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -153,6 +154,12 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         super.onActivityResult(requestCode, resultCode, data);
 
         try {
+
+            if(data == null){
+                // No photo selected
+                return;
+            }
+
             // When an Image is picked from gallery
             if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && null != data) {
                 Uri selectedImage = data.getData();
@@ -162,8 +169,6 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
             // When an Image is picked from camera
             if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK && null != data) {
                 // TODO Remove this comments
-                //Bitmap imageCameraBitmap = BitmapFactory.decodeFile(newDogPhotoPath);
-                //imgView.setImageBitmap(imageCameraBitmap);
             }
 
             // Start Dog Analysis Activity
