@@ -1,17 +1,25 @@
 package com.example.dogdeck;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
@@ -22,6 +30,9 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.MappedByteBuffer;
@@ -42,6 +53,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
     TextView height,weight,origin,lifeSpan,temperament;
+    ImageButton share;
     LinearLayout dogHealthIssues;
     String uri = "";
     String strBreedOne,strBreedTwo,strBreedThree;
@@ -66,6 +78,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
         dogHealthIssues = findViewById(R.id.dogHealthIssues);
+        share = findViewById(R.id.shareButton);
         breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
         setDogPhoto();
         analyzeImage();
@@ -248,6 +261,18 @@ public class DogAnalysisActivity extends AppCompatActivity {
                 updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getBaseContext(),"Share",Toast.LENGTH_SHORT).show();
+                try {
+                    shareDogInfo();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void updateSelectedBreed(int dogId,int selectedBreedId){
@@ -267,5 +292,40 @@ public class DogAnalysisActivity extends AppCompatActivity {
             issue.setText(arrOfStr[i]);
             linearLayout.addView(issue);
         }
+    }
+
+    private void shareDogInfo() throws IOException {
+
+        View view = findViewById(R.id.rootView);
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = view.getBackground();
+
+        if (bgDrawable!=null) {
+            bgDrawable.draw(canvas);
+        }   else{
+            canvas.drawColor(Color.WHITE);
+        }
+        view.draw(canvas);
+
+        // Save Bitmap as JPG
+        String imageFileName = "JPEG_SHARE_IMAGE_DOG.jpg";
+        File imageDogShare = new File(this.getExternalCacheDir(),imageFileName);
+        //Convert bitmap to byte array
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100,bos);
+        byte[] bitmapdata = bos.toByteArray();
+        //Write the bytes in file
+        FileOutputStream fos = new FileOutputStream(imageDogShare);
+        fos.write(bitmapdata);
+        fos.flush();
+        fos.close();
+
+        Uri shareImageURI = FileProvider.getUriForFile(this, "com.example.dogdeck.fileprovider", imageDogShare);
+        final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Intent.EXTRA_STREAM, shareImageURI);
+        intent.setType("image/jpg");
+        startActivity(Intent.createChooser(intent, "Share image via"));
     }
 }

@@ -172,7 +172,7 @@ public class UpdateDogActivity extends AppCompatActivity {
     }
 
     private void shareDogInfo() throws IOException {
-        //////////////////////////////////////////////////////
+
         View view = findViewById(R.id.rootView);
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -183,8 +183,8 @@ public class UpdateDogActivity extends AppCompatActivity {
         }   else{
             canvas.drawColor(Color.WHITE);
         }
-
         view.draw(canvas);
+
         // Save Bitmap as JPG
         String imageFileName = "JPEG_SHARE_IMAGE_DOG.jpg";
         File imageDogShare = new File(this.getExternalCacheDir(),imageFileName);
