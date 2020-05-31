@@ -21,18 +21,38 @@
             android:layout_height="250dp"
             android:id="@+id/dogPhoto"/>
 
-        <TextView
-            android:layout_marginVertical="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif"
-            android:maxLines="1"
-            android:textColor="@color/blue_dockdeck"
-            android:drawableLeft="@drawable/ic_percentage_20dp"
-            android:drawablePadding="5dp"
-            android:text="Dog Breed"
-            android:textSize="21dp"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="3"
+            >
+
+            <TextView
+                android:layout_weight="2"
+                android:layout_marginVertical="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif"
+                android:maxLines="1"
+                android:textColor="@color/blue_dockdeck"
+                android:drawableLeft="@drawable/ic_percentage_20dp"
+                android:drawablePadding="5dp"
+                android:text="Dog Breed"
+                android:textSize="21dp"/>
+
+            <ImageButton
+                android:id="@+id/shareButton"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/share_button_background"
+                android:background="@color/white"
+                android:layout_gravity="center"
+                />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/breedOne"

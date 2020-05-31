@@ -5,16 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 
 import DataBase.DBManager;
 import Models.Dog;
@@ -25,6 +23,7 @@ public class UpdateDogActivity extends AppCompatActivity {
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
     TextView height,weight,origin,lifeSpan,temperament;
+    ImageButton share;
     LinearLayout dogHealthIssues;
     int idDog;
     Dog dog;
@@ -45,6 +44,7 @@ public class UpdateDogActivity extends AppCompatActivity {
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
         dogHealthIssues = findViewById(R.id.dogHealthIssues);
+        share = findViewById(R.id.shareButton);
         setDogData();
         dogsBreedsListeners();
     }
@@ -126,6 +126,14 @@ public class UpdateDogActivity extends AppCompatActivity {
                 setDogData();
             }
         });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getBaseContext(),"Share",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void updateSelectedBreed(int dogId,int selectedBreedId){
