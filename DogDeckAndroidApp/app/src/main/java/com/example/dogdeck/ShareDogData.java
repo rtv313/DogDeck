@@ -23,16 +23,12 @@ public class ShareDogData {
     public static void shareDogInfo(Activity activity) throws IOException {
 
         View view = activity.findViewById(R.id.rootView);
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight() * 2,Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        Drawable bgDrawable = view.getBackground();
-
-        if (bgDrawable!=null) {
-            bgDrawable.draw(canvas);
-        }   else{
-            canvas.drawColor(Color.WHITE);
-        }
+        canvas.drawColor(Color.WHITE);
+        view.layout(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
         view.draw(canvas);
+
 
         // Save Bitmap as JPG
         String imageFileName = "JPEG_SHARE_IMAGE_DOG.jpg";
