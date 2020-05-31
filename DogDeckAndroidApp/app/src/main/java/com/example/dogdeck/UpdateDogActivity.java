@@ -7,8 +7,11 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,7 +24,8 @@ public class UpdateDogActivity extends AppCompatActivity {
 
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
-    TextView height,weight,origin,lifeSpan,temperament,health;
+    TextView height,weight,origin,lifeSpan,temperament;
+    LinearLayout dogHealthIssues;
     int idDog;
     Dog dog;
     DogData dogDataSelected,dogDataBreedOne,dogDataBreedTwo,dogDataBreedThree;
@@ -40,8 +44,7 @@ public class UpdateDogActivity extends AppCompatActivity {
         origin = findViewById(R.id.origin);
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
-        health = findViewById(R.id.health);
-
+        dogHealthIssues = findViewById(R.id.dogHealthIssues);
         setDogData();
         dogsBreedsListeners();
     }
@@ -72,7 +75,9 @@ public class UpdateDogActivity extends AppCompatActivity {
         origin.setText("Origin: " + dogDataSelected.getOrigin());
         lifeSpan.setText("Life Span: " + dogDataSelected.getLifeSpan());
         temperament.setText(dogDataSelected.getTemperament());
-        health.setText(getHealthIssues(dogDataSelected.getHealth()));
+
+
+        getHealthIssues(dogDataSelected.getHealth(),dogHealthIssues);
 
 
         if(dog.getSelectedBreed() == dog.getBreedOneId()){
@@ -130,16 +135,16 @@ public class UpdateDogActivity extends AppCompatActivity {
         dbManager.close();
     }
 
-    private Spanned getHealthIssues(String health){
+    private void getHealthIssues(String health,LinearLayout linearLayout){
+        linearLayout.removeAllViews();
         String[] arrOfStr = health.split("\\|");
-        String result = "";
-        for(int i = 1; i < arrOfStr.length; i++){
-            if(i!=arrOfStr.length)
-               result += "<li>" + arrOfStr[i] + "</li>\n";
-            else
-                result += "<li>" + arrOfStr[i] + "</li>";
-        }
 
-        return Html.fromHtml(result);
+        for(int i = 1; i < arrOfStr.length; i++){
+            LayoutInflater lInflater = LayoutInflater.from(this);
+            View view = lInflater.inflate(R.layout.dog_health_issue,null);
+            TextView  issue = view.findViewById(R.id.dogIssue);
+            issue.setText(arrOfStr[i]);
+            linearLayout.addView(issue);
+        }
     }
 }

@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.tensorflow.lite.DataType;
@@ -39,7 +41,8 @@ public class DogAnalysisActivity extends AppCompatActivity {
 
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
-    TextView height,weight,origin,lifeSpan,temperament,health;
+    TextView height,weight,origin,lifeSpan,temperament;
+    LinearLayout dogHealthIssues;
     String uri = "";
     String strBreedOne,strBreedTwo,strBreedThree;
     float percentageBreedOne,percentageBreedTwo,percentageBreedThree;
@@ -62,7 +65,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
         origin = findViewById(R.id.origin);
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
-        health = findViewById(R.id.health);
+        dogHealthIssues = findViewById(R.id.dogHealthIssues);
         breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
         setDogPhoto();
         analyzeImage();
@@ -206,7 +209,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
         origin.setText("Origin: " + dogData.getOrigin());
         lifeSpan.setText("Life Span: " + dogData.getLifeSpan());
         temperament.setText(dogData.getTemperament());
-        health.setText(dogData.getHealth());
+        getHealthIssues(dogData.getHealth(),dogHealthIssues);
     }
 
     private void dogsBreedsListeners(){
@@ -252,5 +255,17 @@ public class DogAnalysisActivity extends AppCompatActivity {
         dbManager.open();
         dbManager.updateDog(dogId,selectedBreedId);
         dbManager.close();
+    }
+
+    private void getHealthIssues(String health, LinearLayout linearLayout){
+        linearLayout.removeAllViews();
+        String[] arrOfStr = health.split("\\|");
+        for(int i = 1; i < arrOfStr.length; i++){
+            LayoutInflater lInflater = LayoutInflater.from(this);
+            View view = lInflater.inflate(R.layout.dog_health_issue,null);
+            TextView  issue = view.findViewById(R.id.dogIssue);
+            issue.setText(arrOfStr[i]);
+            linearLayout.addView(issue);
+        }
     }
 }

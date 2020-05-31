@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.dogdeck.DogAnalysisActivity"
     android:background="@color/white"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -175,15 +171,12 @@
             android:text="Health"
             android:textSize="18dp"/>
 
-        <TextView
-            android:id="@+id/health"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
-            android:text="health"/>
+        <LinearLayout
+            android:id="@+id/dogHealthIssues"
+            android:orientation="vertical"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+</ScrollView>
