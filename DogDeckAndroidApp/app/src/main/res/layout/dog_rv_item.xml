@@ -74,6 +74,7 @@
                 android:fontFamily="sans-serif-light"
                 android:maxLines="1"
                 android:text="50/30/20"
+                android:drawablePadding ="5dp"
                 android:textColor="@color/black"
                 android:drawableLeft="@drawable/ic_percentage_20dp"
                 android:textSize="15dp" />
@@ -87,6 +88,7 @@
                 android:fontFamily="sans-serif-light"
                 android:maxLines="1"
                 android:text="Origin"
+                android:drawablePadding ="5dp"
                 android:textColor="@color/black"
                 android:drawableLeft="@drawable/ic_origin_20dp"
                 android:textSize="15dp" />

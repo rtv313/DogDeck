@@ -96,7 +96,6 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     private void showPopUpMediaOptions(){
         final Dialog openDialog = new Dialog(MyDogsActivity.this);
         openDialog.setContentView(R.layout.select_camera_or_gallery_dialog);
-        openDialog.setTitle("Custom Dialog Box");
         ImageButton camera = openDialog.findViewById(R.id.cameraBtn);
         ImageButton gallery = openDialog.findViewById(R.id.galleryBtn);
 

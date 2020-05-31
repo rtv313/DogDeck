@@ -63,7 +63,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
         lifeSpan = findViewById(R.id.lifeSpan);
         temperament = findViewById(R.id.temperament);
         health = findViewById(R.id.health);
-        breedOne.setTextColor(getResources().getColor(R.color.red));
+        breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
         setDogPhoto();
         analyzeImage();
         dogsBreedsListeners();
@@ -172,19 +172,19 @@ public class DogAnalysisActivity extends AppCompatActivity {
             if (i == 0) {
                 strBreedOne = key;
                 percentageBreedOne = resultsMap.get(strBreedOne) * 100;
-                breedOne.setText(key +" "+ String.valueOf(percentageBreedOne) + "%");
+                breedOne.setText(key +" "+ String.valueOf(percentageBreedOne) + " %");
             }
 
             if (i == 1) {
                 strBreedTwo = key;
                 percentageBreedTwo = resultsMap.get(strBreedTwo) * 100;
-                breedTwo.setText(key + " " + String.valueOf(percentageBreedTwo) + "%");
+                breedTwo.setText(key + " " + String.valueOf(percentageBreedTwo) + " %");
             }
 
             if (i == 2) {
                 strBreedThree = key;
                 percentageBreedThree = resultsMap.get(strBreedThree) * 100;
-                breedThree.setText(key + " " + String.valueOf(percentageBreedThree) + "%");
+                breedThree.setText(key + " " + String.valueOf(percentageBreedThree) + " %");
             }
 
             if(i==3)
@@ -201,10 +201,10 @@ public class DogAnalysisActivity extends AppCompatActivity {
         DogData dogData = dbManager.getDogData(selectedBreed);
         dbManager.close();
 
-        height.setText("Height:" + dogData.getHeight());
-        weight.setText("Weight:" + dogData.getWeight());
-        origin.setText("Origin:" + dogData.getOrigin());
-        lifeSpan.setText("Life Span:" + dogData.getLifeSpan());
+        height.setText("Height: " + dogData.getHeight());
+        weight.setText("Weight: " + dogData.getWeight());
+        origin.setText("Origin: " + dogData.getOrigin());
+        lifeSpan.setText("Life Span: " + dogData.getLifeSpan());
         temperament.setText(dogData.getTemperament());
         health.setText(dogData.getHealth());
     }
@@ -215,7 +215,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
             public void onClick(View v) {
                 selectedBreed =  mapBreedToIndex.get(strBreedOne);
                 setDogData();
-                breedOne.setTextColor(getResources().getColor(R.color.red));
+                breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
                 breedTwo.setTextColor(getResources().getColor(R.color.black));
                 breedThree.setTextColor(getResources().getColor(R.color.black));
                 updateSelectedBreed(idDogCreated,selectedBreed);
@@ -228,7 +228,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
                 selectedBreed =  mapBreedToIndex.get(strBreedTwo);
                 setDogData();
                 breedOne.setTextColor(getResources().getColor(R.color.black));
-                breedTwo.setTextColor(getResources().getColor(R.color.red));
+                breedTwo.setTextColor(getResources().getColor(R.color.blue_dockdeck));
                 breedThree.setTextColor(getResources().getColor(R.color.black));
                 updateSelectedBreed(idDogCreated,selectedBreed);
             }
@@ -241,7 +241,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
                 setDogData();
                 breedOne.setTextColor(getResources().getColor(R.color.black));
                 breedTwo.setTextColor(getResources().getColor(R.color.black));
-                breedThree.setTextColor(getResources().getColor(R.color.red));
+                breedThree.setTextColor(getResources().getColor(R.color.blue_dockdeck));
                 updateSelectedBreed(idDogCreated,selectedBreed);
             }
         });

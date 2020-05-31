@@ -59,33 +59,33 @@ public class UpdateDogActivity extends AppCompatActivity {
         Bitmap imageCameraBitmap = BitmapFactory.decodeFile(dog.getUriImage());
         dogPhoto.setImageBitmap(imageCameraBitmap);
 
-        breedOne.setText(dogDataBreedOne.getName() + " : " + dog.getPercentageBreedOne());
-        breedTwo.setText(dogDataBreedTwo.getName() + " : " + dog.getPercentageBreedTwo());
-        breedThree.setText(dogDataBreedThree.getName() + " : " + dog.getPercentageBreedThree());
+        breedOne.setText(dogDataBreedOne.getName() + ": " + dog.getPercentageBreedOne() + " %");
+        breedTwo.setText(dogDataBreedTwo.getName() + ": " + dog.getPercentageBreedTwo() + " %");
+        breedThree.setText(dogDataBreedThree.getName() + ": " + dog.getPercentageBreedThree() + " %");
 
-        height.setText("Height:" + dogDataSelected.getHeight());
-        weight.setText("Weight:" + dogDataSelected.getWeight());
-        origin.setText("Origin:" + dogDataSelected.getOrigin());
-        lifeSpan.setText("Life Span:" + dogDataSelected.getLifeSpan());
+        height.setText("Height: " + dogDataSelected.getHeight());
+        weight.setText("Weight: " + dogDataSelected.getWeight());
+        origin.setText("Origin: " + dogDataSelected.getOrigin());
+        lifeSpan.setText("Life Span: " + dogDataSelected.getLifeSpan());
         temperament.setText(dogDataSelected.getTemperament());
         health.setText(dogDataSelected.getHealth());
 
         if(dog.getSelectedBreed() == dog.getBreedOneId()){
-            breedOne.setTextColor(getResources().getColor(R.color.red));
+            breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
             breedTwo.setTextColor(getResources().getColor(R.color.black));
             breedThree.setTextColor(getResources().getColor(R.color.black));
         }
 
         if(dog.getSelectedBreed() == dog.getBreedTwoId()){
             breedOne.setTextColor(getResources().getColor(R.color.black));
-            breedTwo.setTextColor(getResources().getColor(R.color.red));
+            breedTwo.setTextColor(getResources().getColor(R.color.blue_dockdeck));
             breedThree.setTextColor(getResources().getColor(R.color.black));
         }
 
         if(dog.getSelectedBreed() == dog.getBreedThreeId()){
             breedOne.setTextColor(getResources().getColor(R.color.black));
             breedTwo.setTextColor(getResources().getColor(R.color.black));
-            breedThree.setTextColor(getResources().getColor(R.color.red));
+            breedThree.setTextColor(getResources().getColor(R.color.blue_dockdeck));
         }
     }
 
