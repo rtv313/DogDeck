@@ -267,7 +267,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getBaseContext(),"Share",Toast.LENGTH_SHORT).show();
                 try {
-                    shareDogInfo();
+                    ShareDogData.shareDogInfo(DogAnalysisActivity.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -292,40 +292,5 @@ public class DogAnalysisActivity extends AppCompatActivity {
             issue.setText(arrOfStr[i]);
             linearLayout.addView(issue);
         }
-    }
-
-    private void shareDogInfo() throws IOException {
-
-        View view = findViewById(R.id.rootView);
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Drawable bgDrawable = view.getBackground();
-
-        if (bgDrawable!=null) {
-            bgDrawable.draw(canvas);
-        }   else{
-            canvas.drawColor(Color.WHITE);
-        }
-        view.draw(canvas);
-
-        // Save Bitmap as JPG
-        String imageFileName = "JPEG_SHARE_IMAGE_DOG.jpg";
-        File imageDogShare = new File(this.getExternalCacheDir(),imageFileName);
-        //Convert bitmap to byte array
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100,bos);
-        byte[] bitmapdata = bos.toByteArray();
-        //Write the bytes in file
-        FileOutputStream fos = new FileOutputStream(imageDogShare);
-        fos.write(bitmapdata);
-        fos.flush();
-        fos.close();
-
-        Uri shareImageURI = FileProvider.getUriForFile(this, "com.example.dogdeck.fileprovider", imageDogShare);
-        final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(Intent.EXTRA_STREAM, shareImageURI);
-        intent.setType("image/jpg");
-        startActivity(Intent.createChooser(intent, "Share image via"));
     }
 }
