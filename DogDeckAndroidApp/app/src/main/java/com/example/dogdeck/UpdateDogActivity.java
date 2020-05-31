@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import DataBase.DBManager;
 import Models.Dog;
@@ -68,7 +72,8 @@ public class UpdateDogActivity extends AppCompatActivity {
         origin.setText("Origin: " + dogDataSelected.getOrigin());
         lifeSpan.setText("Life Span: " + dogDataSelected.getLifeSpan());
         temperament.setText(dogDataSelected.getTemperament());
-        health.setText(dogDataSelected.getHealth());
+        health.setText(getHealthIssues(dogDataSelected.getHealth()));
+
 
         if(dog.getSelectedBreed() == dog.getBreedOneId()){
             breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
@@ -123,5 +128,18 @@ public class UpdateDogActivity extends AppCompatActivity {
         dbManager.open();
         dbManager.updateDog(dogId,selectedBreedId);
         dbManager.close();
+    }
+
+    private Spanned getHealthIssues(String health){
+        String[] arrOfStr = health.split("\\|");
+        String result = "";
+        for(int i = 1; i < arrOfStr.length; i++){
+            if(i!=arrOfStr.length)
+               result += "<li>" + arrOfStr[i] + "</li>\n";
+            else
+                result += "<li>" + arrOfStr[i] + "</li>";
+        }
+
+        return Html.fromHtml(result);
     }
 }
