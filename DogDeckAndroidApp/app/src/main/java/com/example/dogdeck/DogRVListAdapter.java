@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import DataBase.DBManager;
@@ -24,7 +25,8 @@ import Models.DogData;
 
 public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyViewHolder> {
         private Context context;
-        private List<Dog> dogList;
+        private Activity activity;
+        private LinkedList<Dog> dogList;
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView name;
@@ -45,9 +47,10 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
             }
         }
 
-        public DogRVListAdapter(Context context, List<Dog> dogList) {
+        public DogRVListAdapter(Context context,Activity activity,LinkedList<Dog> dogList) {
             this.context = context;
             this.dogList = dogList;
+            this.activity = activity;
         }
 
         @Override
@@ -80,6 +83,7 @@ public class DogRVListAdapter extends RecyclerView.Adapter<DogRVListAdapter.MyVi
 
         public void removeItem(int position) {
             dogList.remove(position);
+            ((MyDogsActivity)activity).removeAddDogsMessage();
             // notify the item removed by position
             // to perform recycler view delete animations
             // NOTE: don't call notifyDataSetChanged()

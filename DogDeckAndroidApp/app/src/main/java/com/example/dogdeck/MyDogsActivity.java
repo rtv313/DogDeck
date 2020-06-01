@@ -278,7 +278,7 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         dbManager.open();
         dogsRVList = dbManager.getDogs();
         dbManager.close();
-        mAdapter = new DogRVListAdapter(this, dogsRVList);
+        mAdapter = new DogRVListAdapter(this,this, dogsRVList);
         recyclerView.setAdapter(mAdapter);
         removeAddDogsMessage();
     }
@@ -293,10 +293,9 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         String filePath = deletedDog.getUriImage();
         File file = new File(filePath);
         file.delete();
-        removeAddDogsMessage();
     }
 
-    private void removeAddDogsMessage(){
+    protected void removeAddDogsMessage(){
         if(dogsRVList.size() == 0){
              addDogText.setVisibility(View.VISIBLE);
         }else{
