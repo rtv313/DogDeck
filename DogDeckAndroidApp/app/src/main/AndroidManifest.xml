@@ -18,12 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".UpdateDogActivity"
-                  android:theme="@style/Theme.AppCompat.NoActionBar" />
+                  android:theme="@style/Theme.AppCompat.NoActionBar"
+                  android:screenOrientation="portrait"/>
         <activity android:name=".DogAnalysisActivity"
-                  android:theme="@style/Theme.AppCompat.NoActionBar" />
+                  android:theme="@style/Theme.AppCompat.NoActionBar"
+                  android:screenOrientation="portrait"/>
         <activity
             android:name=".MyDogsActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
