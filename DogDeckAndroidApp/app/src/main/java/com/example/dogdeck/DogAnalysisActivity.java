@@ -3,6 +3,7 @@ package com.example.dogdeck;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,12 +13,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +53,8 @@ import Models.DogData;
 
 public class DogAnalysisActivity extends AppCompatActivity {
 
+    final Handler handler = new Handler();
+    ProgressDialog progress;
     ImageView dogPhoto;
     TextView breedOne,breedTwo,breedThree;
     TextView height,weight,origin,lifeSpan,temperament;
@@ -80,10 +85,24 @@ public class DogAnalysisActivity extends AppCompatActivity {
         dogHealthIssues = findViewById(R.id.dogHealthIssues);
         share = findViewById(R.id.shareButton);
         breedOne.setTextColor(getResources().getColor(R.color.blue_dockdeck));
+
+        progress = new ProgressDialog(this);
+        progress.setTitle("Analyzing Image");
+        progress.setMessage("Wait while loading...");
+        progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+        progress.show();
         setDogPhoto();
-        analyzeImage();
         dogsBreedsListeners();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                analyzeImage();
+            }
+        }, 1500);
+
     }
+
 
     private void setDogPhoto(){
         Bundle bundle = getIntent().getExtras();
@@ -133,8 +152,8 @@ public class DogAnalysisActivity extends AppCompatActivity {
         int fkBreedTwo = mapBreedToIndex.get(strBreedTwo);
         int fkBreedThree = mapBreedToIndex.get(strBreedThree);
         selectedBreed = fkBreedOne;
-        idDogCreated = dbManager.addDog(fkBreedOne,fkBreedTwo,fkBreedThree,percentageBreedOne,percentageBreedTwo,
-                         percentageBreedThree,selectedBreed,uri);
+        idDogCreated = dbManager.addDog(fkBreedOne,fkBreedTwo,fkBreedThree,percentageBreedOne,
+                percentageBreedTwo,percentageBreedThree,selectedBreed,uri);
         dbManager.close();
     }
 
@@ -209,6 +228,7 @@ public class DogAnalysisActivity extends AppCompatActivity {
         }
         saveResults();
         setDogData();
+        progress.dismiss();
     }
 
     private void setDogData(){
