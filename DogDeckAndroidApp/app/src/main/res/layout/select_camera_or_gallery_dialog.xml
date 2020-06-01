@@ -1,33 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:background="@color/white"
-    android:padding="10px">
+    android:paddingVertical="25dp"
+    android:paddingHorizontal="80dp"
+   >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:text="Select Media for Photo"
-        android:textColor="@color/black"
-        android:textSize="18dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:drawablePadding ="5dp"
+        android:maxLines="1"
+        android:text="Select from:"
+        android:textSize="20dp"
+        android:textColor="@color/dark_gray"
     />
 
-    <ImageButton
-        android:layout_width="90dp"
-        android:layout_height="70dp"
-        android:fontFamily="sans-serif"
-        android:background="@drawable/ic_photo_camera_24dp"
-        android:id="@+id/cameraBtn"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <ImageButton
-        android:layout_width="90dp"
-        android:layout_height="70dp"
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:drawableLeft="@drawable/camera_selection"
+            android:text=" Camera"
+            android:textSize="20dp"
+            android:layout_gravity="left"
+            android:textColor="@color/black"
+            android:id="@+id/cameraBtn"/>
 
-        android:background="@drawable/ic_folder_24dp"
-        android:id="@+id/galleryBtn"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Gallery"
+            android:layout_gravity="left"
+            android:drawablePadding="5dp"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:drawableLeft="@drawable/gallery_selection"
+            android:id="@+id/galleryBtn"/>
+
+    </LinearLayout>
 
 </LinearLayout>

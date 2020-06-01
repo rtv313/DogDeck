@@ -25,10 +25,12 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -51,6 +53,7 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     private static final int CAMERA_REQUEST = 2;
     private FloatingActionButton addDogFab;
     private String newDogPhotoPath;
+    private TextView addDogText;
     private RecyclerView recyclerView;
     private LinkedList<Dog> dogsRVList;
     private DogRVListAdapter mAdapter;
@@ -62,7 +65,7 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_dogs);
         addDogFab =  findViewById(R.id.add_dog);
-
+        addDogText = findViewById(R.id.addDogs);
         addDogFab.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -96,8 +99,8 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
     private void showPopUpMediaOptions(){
         final Dialog openDialog = new Dialog(MyDogsActivity.this);
         openDialog.setContentView(R.layout.select_camera_or_gallery_dialog);
-        ImageButton camera = openDialog.findViewById(R.id.cameraBtn);
-        ImageButton gallery = openDialog.findViewById(R.id.galleryBtn);
+        TextView camera = openDialog.findViewById(R.id.cameraBtn);
+        TextView gallery = openDialog.findViewById(R.id.galleryBtn);
 
         gallery.setOnClickListener(new View.OnClickListener(){
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -277,6 +280,7 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         dbManager.close();
         mAdapter = new DogRVListAdapter(this, dogsRVList);
         recyclerView.setAdapter(mAdapter);
+        removeAddDogsMessage();
     }
 
     private void deleteDog(Dog deletedDog,int position){
@@ -289,5 +293,14 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
         String filePath = deletedDog.getUriImage();
         File file = new File(filePath);
         file.delete();
+        removeAddDogsMessage();
+    }
+
+    private void removeAddDogsMessage(){
+        if(dogsRVList.size() == 0){
+             addDogText.setVisibility(View.VISIBLE);
+        }else{
+            addDogText.setVisibility(View.INVISIBLE);
+        }
     }
 }

@@ -10,4 +10,5 @@
     <color name="gray">#CCCCCC</color>
     <color name="light_gray">#E8E3E3</color>
     <color name="blue_dockdeck">#20207F</color>
+    <color name="dark_gray">#808081</color>
 </resources>
