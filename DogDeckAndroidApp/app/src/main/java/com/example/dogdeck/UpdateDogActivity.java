@@ -140,7 +140,6 @@ public class UpdateDogActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(),"Share",Toast.LENGTH_SHORT).show();
                 try {
                     ShareDogData.shareDogInfo(UpdateDogActivity.this);
                 } catch (IOException e) {
