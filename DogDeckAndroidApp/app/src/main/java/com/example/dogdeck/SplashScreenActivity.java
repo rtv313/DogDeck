@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import DataBase.DBManager;
-import DataBase.DatabaseHelper;
+
 
 public class SplashScreenActivity extends AppCompatActivity {
 

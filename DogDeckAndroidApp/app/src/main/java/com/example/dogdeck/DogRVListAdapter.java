@@ -17,7 +17,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
-import java.util.List;
+
 
 import DataBase.DBManager;
 import Models.Dog;
