@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.dogdeck">
+    package="com.rtv313.dogdeck">
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,18 +17,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdateDogActivity"
+        <activity android:name="com.rtv313.dogdeck.UpdateDogActivity"
                   android:theme="@style/Theme.AppCompat.NoActionBar"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".DogAnalysisActivity"
+        <activity android:name="com.rtv313.dogdeck.DogAnalysisActivity"
                   android:theme="@style/Theme.AppCompat.NoActionBar"
                   android:screenOrientation="portrait"/>
         <activity
-            android:name=".MyDogsActivity"
+            android:name="com.rtv313.dogdeck.MyDogsActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="com.rtv313.dogdeck.SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.dogdeck.fileprovider"
+            android:authorities="com.rtv313.dogdeck.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

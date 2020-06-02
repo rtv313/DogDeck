@@ -1,4 +1,4 @@
-package com.example.dogdeck;
+package com.rtv313.dogdeck;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -139,8 +139,7 @@ public class MyDogsActivity extends AppCompatActivity implements RecyclerItemTou
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.dogdeck.fileprovider", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, "com.rtv313.dogdeck.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent,CAMERA_REQUEST);
             }

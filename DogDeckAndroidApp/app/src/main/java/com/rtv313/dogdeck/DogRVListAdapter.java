@@ -1,4 +1,4 @@
-package com.example.dogdeck;
+package com.rtv313.dogdeck;
 
 import android.app.Activity;
 import android.content.Context;

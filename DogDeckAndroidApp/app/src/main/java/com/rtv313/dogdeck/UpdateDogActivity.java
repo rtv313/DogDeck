@@ -1,4 +1,4 @@
-package com.example.dogdeck;
+package com.rtv313.dogdeck;
 
 import androidx.appcompat.app.AppCompatActivity;
 
